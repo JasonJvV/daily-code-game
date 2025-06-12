@@ -185,6 +185,15 @@
             background: #545b62;
         }
 
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
@@ -295,6 +304,136 @@
             margin-top: 5px;
         }
 
+        /* Stats Page Styles */
+        .stats-container {
+            text-align: center;
+            color: white;
+        }
+
+        .completion-message {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .completion-message.won {
+            color: #28a745;
+        }
+
+        .completion-message.lost {
+            color: #dc3545;
+        }
+
+        .solution-display {
+            margin-bottom: 30px;
+        }
+
+        .solution-label {
+            color: #ccc;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .solution-code {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .solution-slot {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .yesterday-solution {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+
+        .yesterday-label {
+            color: #ccc;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .yesterday-code {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .yesterday-slot {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #666;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #ccc;
+        }
+
+        .fastest-time {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffc107;
+        }
+
+        .fastest-time .stat-value {
+            color: #ffc107;
+        }
+
+        .share-section {
+            background: #222;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            margin-bottom: 20px;
+        }
+
+        .share-title {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        .emoji-grid {
+            font-family: monospace;
+            font-size: 1.2em;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #111;
+            border-radius: 4px;
+            white-space: pre;
+        }
+
+        .play-again-btn {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
         @media (max-width: 480px) {
             .game-container {
                 padding: 20px;
@@ -308,61 +447,134 @@
 </head>
 <body>
     <div class="game-container">
-        <div class="header">
-            <h1 class="title">Daily Code</h1>
-            <div class="header-row">
-                <div class="duplicates-container">
-                    <span class="duplicates-label">Duplicates</span>
-                    <div class="toggle" id="duplicates-toggle">
-                        <div class="toggle-slider"></div>
+        <!-- Game View -->
+        <div id="game-view">
+            <div class="header">
+                <h1 class="title">Daily Code</h1>
+                <div class="header-row">
+                    <div class="duplicates-container">
+                        <span class="duplicates-label">Duplicates</span>
+                        <div class="toggle" id="duplicates-toggle">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="puzzle-info">
+                        <div id="puzzle-number">Puzzle #1</div>
+                        <div id="date-info"></div>
                     </div>
                 </div>
-                <div class="puzzle-info">
-                    <div id="puzzle-number">Puzzle #1</div>
-                    <div id="date-info"></div>
+            </div>
+
+            <div class="timer-info">
+                <span>Guess: <span id="guess-count">1</span>/10</span>
+                <span>Time: <span id="timer">00:00</span></span>
+            </div>
+
+            <div class="hint-section" id="hint-section" style="display: none;">
+                <button class="btn btn-secondary" id="hint-btn">Use Hint (Eliminate 1 Number)</button>
+            </div>
+
+            <div class="color-palette" id="color-palette"></div>
+
+            <div class="controls">
+                <button class="btn btn-secondary" id="clear-btn">Clear</button>
+                <button class="btn btn-primary" id="submit-btn" disabled>Submit Guess</button>
+            </div>
+
+            <div class="guess-board" id="guess-board"></div>
+
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="current-streak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="max-streak">0</div>
+                    <div class="stat-label">Max Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avg-guesses">-</div>
+                    <div class="stat-label">Avg Guesses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="games-played">0</div>
+                    <div class="stat-label">Games Played</div>
                 </div>
             </div>
         </div>
 
-        <div class="timer-info">
-            <span>Guess: <span id="guess-count">1</span>/10</span>
-            <span>Time: <span id="timer">00:00</span></span>
-        </div>
-
-        <div class="hint-section" id="hint-section" style="display: none;">
-            <button class="btn btn-secondary" id="hint-btn">Use Hint (Eliminate 1 Number)</button>
-        </div>
-
-        <div class="color-palette" id="color-palette"></div>
-
-        <div class="controls">
-            <button class="btn btn-secondary" id="clear-btn">Clear</button>
-            <button class="btn btn-primary" id="submit-btn" disabled>Submit Guess</button>
-        </div>
-
-        <div class="guess-board" id="guess-board"></div>
-
-        <div class="stats" id="stats">
-            <div class="stat-card">
-                <div class="stat-value" id="current-streak">0</div>
-                <div class="stat-label">Current Streak</div>
+        <!-- Stats View -->
+        <div id="stats-view" class="stats-container hidden">
+            <div class="completion-message" id="completion-message"></div>
+            
+            <div class="solution-display">
+                <div class="solution-label">Today's Code:</div>
+                <div class="solution-code" id="solution-code"></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="max-streak">0</div>
-                <div class="stat-label">Max Streak</div>
+
+            <div class="yesterday-solution">
+                <div class="yesterday-label">Yesterday's Solution:</div>
+                <div class="yesterday-code" id="yesterday-code">
+                    <span class="loading">Loading...</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="avg-guesses">-</div>
-                <div class="stat-label">Avg Guesses</div>
+
+            <div class="fastest-time stat-card">
+                <div class="stat-value" id="fastest-time-today">--:--</div>
+                <div class="stat-label">Fastest Time Today</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="games-played">0</div>
-                <div class="stat-label">Games Played</div>
+
+            <div class="stats" id="final-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="players-today">0</div>
+                    <div class="stat-label">Players Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="final-current-streak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="final-max-streak">0</div>
+                    <div class="stat-label">Max Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="final-avg-guesses">-</div>
+                    <div class="stat-label">Avg Guesses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="final-games-played">0</div>
+                    <div class="stat-label">Games Played</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="win-rate">0%</div>
+                    <div class="stat-label">Win Rate</div>
+                </div>
             </div>
+
+            <div class="share-section">
+                <div class="share-title">Share Your Result</div>
+                <div class="emoji-grid" id="emoji-grid"></div>
+                <button class="btn btn-success" id="copy-btn">Copy to Clipboard</button>
+            </div>
+
+            <button class="btn btn-primary play-again-btn" id="play-again-btn">Play Tomorrow's Puzzle</button>
         </div>
     </div>
 
     <script>
+        // IMPORTANT: Replace this with your Railway backend URL
+        const API_URL = 'https://your-backend-url.railway.app/api';
+        
+        // Generate or get player ID
+        function getPlayerId() {
+            let playerId = localStorage.getItem('dailyCodePlayerId');
+            if (!playerId) {
+                playerId = 'player_' + Math.random().toString(36).substr(2, 9) + Date.now();
+                localStorage.setItem('dailyCodePlayerId', playerId);
+            }
+            return playerId;
+        }
+
         class DailyCodeGame {
             constructor() {
                 this.numbers = [
@@ -377,6 +589,8 @@
                 this.secretCode = [];
                 this.currentGuess = [null, null, null, null];
                 this.guesses = [];
+                this.attempts = [];
+                this.feedbackHistory = [];
                 this.gameOver = false;
                 this.gameWon = false;
                 this.startTime = Date.now();
@@ -384,11 +598,40 @@
                 this.hintsUsed = 0;
                 this.eliminatedColors = new Set();
                 this.currentRow = 0;
+                this.playerId = getPlayerId();
                 
                 this.initializeGame();
                 this.setupEventListeners();
                 this.updateDisplay();
                 this.startTimer();
+            }
+
+            async initializeGame() {
+                // Check if already played today
+                const today = new Date().toISOString().split('T')[0];
+                const lastPlayDate = localStorage.getItem('dailyCodeLastPlay');
+                
+                if (lastPlayDate === today) {
+                    this.gameOver = true;
+                    this.loadSavedGameData();
+                    this.showStatsPage();
+                    return;
+                }
+                
+                // Fetch today's puzzle info
+                try {
+                    const response = await fetch(`${API_URL}/puzzle/today?duplicates=${this.duplicatesAllowed}`);
+                    if (response.ok) {
+                        this.todayData = await response.json();
+                    }
+                } catch (error) {
+                    console.log('Continuing with offline mode');
+                }
+                
+                this.secretCode = this.generateDailyCode();
+                this.updatePuzzleInfo();
+                this.renderGuessBoard();
+                this.renderColorPalette();
                 this.loadStats();
             }
 
@@ -430,13 +673,6 @@
                 };
             }
 
-            initializeGame() {
-                this.secretCode = this.generateDailyCode();
-                this.updatePuzzleInfo();
-                this.renderGuessBoard();
-                this.renderColorPalette();
-            }
-
             updatePuzzleInfo() {
                 const today = new Date();
                 const startDate = new Date('2024-01-01');
@@ -469,6 +705,14 @@
 
                 document.getElementById('hint-btn').addEventListener('click', () => {
                     this.useHint();
+                });
+
+                document.getElementById('copy-btn').addEventListener('click', () => {
+                    this.copyToClipboard();
+                });
+
+                document.getElementById('play-again-btn').addEventListener('click', () => {
+                    alert("Come back tomorrow for a new puzzle!");
                 });
             }
 
@@ -512,7 +756,6 @@
             }
 
             renderColorPalette() {
-                console.log('Creating number palette...');
                 const palette = document.getElementById('color-palette');
                 palette.innerHTML = '';
 
@@ -522,7 +765,6 @@
                     btn.textContent = number.value;
                     
                     btn.addEventListener('click', () => {
-                        console.log('Number clicked:', number.value);
                         this.selectNumber(number);
                     });
                     
@@ -541,19 +783,14 @@
             }
 
             selectNumber(number) {
-                console.log('selectNumber called with:', number.value);
-                
                 if (this.gameOver || this.eliminatedColors.has(number.name)) {
-                    console.log('Blocked: game over or eliminated');
                     return;
                 }
 
                 const emptySlot = this.currentGuess.findIndex(slot => slot === null);
-                console.log('Empty slot at index:', emptySlot);
                 
                 if (emptySlot !== -1) {
                     this.currentGuess[emptySlot] = number;
-                    console.log('Added number, currentGuess now:', this.currentGuess);
                     this.updateCurrentRowDisplay();
                     this.updateSubmitButton();
                 }
@@ -619,8 +856,10 @@
 
                 const guess = [...this.currentGuess];
                 this.guesses.push(guess);
+                this.attempts.push(guess.map(g => g.value));
 
                 const feedback = this.getFeedback(guess);
+                this.feedbackHistory.push(feedback);
                 this.displayGuess(this.currentRow, guess, feedback);
 
                 if (feedback.every(f => f === 'correct')) {
@@ -730,15 +969,254 @@
                 });
             }
 
-            endGame(won) {
+            async endGame(won) {
                 this.gameOver = true;
                 this.gameWon = won;
+                this.endTime = Date.now();
                 
-                if (won) {
-                    alert(`Congratulations! You solved it in ${this.guesses.length} guesses!`);
-                } else {
-                    alert('Game Over! Better luck tomorrow!');
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
                 }
+                
+                // Save game data locally
+                this.saveLocalGameData();
+                
+                // Submit results to backend
+                await this.submitResults();
+                
+                // Show stats page after a short delay
+                setTimeout(() => {
+                    this.showStatsPage();
+                }, 1000);
+            }
+
+            saveLocalGameData() {
+                const today = new Date().toISOString().split('T')[0];
+                const gameData = {
+                    date: today,
+                    won: this.gameWon,
+                    guesses: this.guesses.length,
+                    attempts: this.attempts,
+                    feedbackHistory: this.feedbackHistory,
+                    secretCode: this.secretCode.map(n => n.value),
+                    time: Math.floor((this.endTime - this.startTime) / 1000)
+                };
+                
+                localStorage.setItem('dailyCodeLastPlay', today);
+                localStorage.setItem('dailyCodeLastGame', JSON.stringify(gameData));
+            }
+
+            loadSavedGameData() {
+                const savedGame = localStorage.getItem('dailyCodeLastGame');
+                if (savedGame) {
+                    const gameData = JSON.parse(savedGame);
+                    this.gameWon = gameData.won;
+                    this.guesses = { length: gameData.guesses };
+                    this.feedbackHistory = gameData.feedbackHistory;
+                    this.secretCode = gameData.secretCode.map(n => ({ name: n.toString(), value: n }));
+                }
+            }
+
+            async submitResults() {
+                const today = new Date().toISOString().split('T')[0];
+                const gameTime = Math.floor((this.endTime - this.startTime) / 1000);
+                
+                try {
+                    const response = await fetch(`${API_URL}/game/submit`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            playerId: this.playerId,
+                            date: today,
+                            won: this.gameWon,
+                            guesses: this.guesses.length,
+                            time: gameTime,
+                            attempts: this.attempts
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.playerStats = data.stats;
+                        this.todayStats = data.todayStats;
+                    }
+                } catch (error) {
+                    console.log('Stats will be updated when connection is restored');
+                }
+            }
+
+            async showStatsPage() {
+                document.getElementById('game-view').classList.add('hidden');
+                document.getElementById('stats-view').classList.remove('hidden');
+                
+                // Set completion message
+                const message = document.getElementById('completion-message');
+                if (this.gameWon) {
+                    message.textContent = `Congratulations! You solved it in ${this.guesses.length} guesses!`;
+                    message.className = 'completion-message won';
+                } else {
+                    message.textContent = 'Better luck tomorrow!';
+                    message.className = 'completion-message lost';
+                }
+                
+                // Display solution
+                const solutionContainer = document.getElementById('solution-code');
+                solutionContainer.innerHTML = '';
+                this.secretCode.forEach(num => {
+                    const slot = document.createElement('div');
+                    slot.className = 'solution-slot';
+                    slot.textContent = num.value;
+                    solutionContainer.appendChild(slot);
+                });
+                
+                // Load all stats
+                await this.loadAndDisplayStats();
+                await this.loadYesterdaySolution();
+                
+                // Generate share text
+                this.generateShareText();
+            }
+
+            async loadAndDisplayStats() {
+                try {
+                    // Fetch player stats
+                    const response = await fetch(`${API_URL}/player/${this.playerId}/stats`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const stats = data.stats;
+                        
+                        // Update stats display
+                        document.getElementById('final-current-streak').textContent = stats.currentStreak || 0;
+                        document.getElementById('final-max-streak').textContent = stats.maxStreak || 0;
+                        document.getElementById('final-games-played').textContent = stats.gamesPlayed || 0;
+                        document.getElementById('final-avg-guesses').textContent = stats.averageGuesses || '-';
+                        document.getElementById('win-rate').textContent = `${stats.winRate || 0}%`;
+                    }
+                    
+                    // Fetch today's puzzle stats
+                    const puzzleResponse = await fetch(`${API_URL}/puzzle/today`);
+                    if (puzzleResponse.ok) {
+                        const puzzleData = await puzzleResponse.json();
+                        
+                        document.getElementById('players-today').textContent = puzzleData.totalPlayers || 1;
+                        
+                        if (puzzleData.fastestTime) {
+                            const minutes = Math.floor(puzzleData.fastestTime / 60);
+                            const seconds = puzzleData.fastestTime % 60;
+                            document.getElementById('fastest-time-today').textContent = 
+                                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        }
+                    }
+                } catch (error) {
+                    console.log('Using offline stats');
+                    this.displayOfflineStats();
+                }
+            }
+
+            displayOfflineStats() {
+                // Load stats from localStorage
+                const stats = this.getStoredStats();
+                document.getElementById('final-current-streak').textContent = stats.currentStreak;
+                document.getElementById('final-max-streak').textContent = stats.maxStreak;
+                document.getElementById('final-games-played').textContent = stats.gamesPlayed;
+                document.getElementById('final-avg-guesses').textContent = stats.avgGuesses || '-';
+                document.getElementById('win-rate').textContent = `${stats.winRate || 0}%`;
+                document.getElementById('players-today').textContent = '1';
+                document.getElementById('fastest-time-today').textContent = '--:--';
+            }
+
+            async loadYesterdaySolution() {
+                try {
+                    const response = await fetch(`${API_URL}/puzzle/yesterday`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const container = document.getElementById('yesterday-code');
+                        container.innerHTML = '';
+                        
+                        data.solution.forEach(num => {
+                            const slot = document.createElement('div');
+                            slot.className = 'yesterday-slot';
+                            slot.textContent = num;
+                            container.appendChild(slot);
+                        });
+                    } else {
+                        document.getElementById('yesterday-code').innerHTML = '<span style="color: #666;">No puzzle yesterday</span>';
+                    }
+                } catch (error) {
+                    document.getElementById('yesterday-code').innerHTML = '<span style="color: #666;">Unable to load</span>';
+                }
+            }
+
+            generateShareText() {
+                const today = new Date();
+                const startDate = new Date('2024-01-01');
+                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                const puzzleNumber = daysDiff + 1;
+                
+                let shareText = `Daily Code #${puzzleNumber} ${this.gameWon ? this.guesses.length : 'X'}/10\n\n`;
+                
+                // Generate emoji grid
+                this.feedbackHistory.forEach(feedback => {
+                    feedback.forEach(result => {
+                        if (result === 'correct') {
+                            shareText += '🟩';
+                        } else if (result === 'wrong-position') {
+                            shareText += '🟨';
+                        } else {
+                            shareText += '⬜';
+                        }
+                    });
+                    shareText += '\n';
+                });
+                
+                shareText += '\nPlay at: https://yourgameurl.com';
+                
+                document.getElementById('emoji-grid').textContent = shareText;
+            }
+
+            copyToClipboard() {
+                const shareText = document.getElementById('emoji-grid').textContent;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        const copyBtn = document.getElementById('copy-btn');
+                        const originalText = copyBtn.textContent;
+                        copyBtn.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                        }, 2000);
+                    }).catch(() => {
+                        this.fallbackCopyToClipboard(shareText);
+                    });
+                } else {
+                    this.fallbackCopyToClipboard(shareText);
+                }
+            }
+
+            fallbackCopyToClipboard(text) {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    const copyBtn = document.getElementById('copy-btn');
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy text:', err);
+                }
+                
+                document.body.removeChild(textArea);
             }
 
             updateGuessCount() {
@@ -746,7 +1224,7 @@
             }
 
             startTimer() {
-                setInterval(() => {
+                this.timerInterval = setInterval(() => {
                     if (!this.gameOver) {
                         const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
                         const minutes = Math.floor(elapsed / 60);
@@ -757,30 +1235,21 @@
                 }, 1000);
             }
 
-            getStats() {
-                return {
-                    gamesPlayed: 0,
-                    gamesWon: 0,
-                    currentStreak: 0,
-                    maxStreak: 0,
-                    totalGuesses: 0
-                };
-            }
-
-            loadStats() {
-                const stats = this.getStats();
-                document.getElementById('current-streak').textContent = stats.currentStreak;
-                document.getElementById('max-streak').textContent = stats.maxStreak;
-                document.getElementById('games-played').textContent = stats.gamesPlayed;
-                document.getElementById('avg-guesses').textContent = '-';
-            }
-
             updateDisplay() {
                 this.renderColorPalette();
                 this.updateCurrentRowDisplay();
             }
 
             restartGame() {
+                // Check if already played today
+                const today = new Date().toISOString().split('T')[0];
+                const lastPlayDate = localStorage.getItem('dailyCodeLastPlay');
+                
+                if (lastPlayDate === today) {
+                    alert("You've already played today's puzzle! Come back tomorrow for a new one.");
+                    return;
+                }
+                
                 this.secretCode = this.generateDailyCode();
                 this.currentGuess = [null, null, null, null];
                 this.guesses = [];
@@ -797,6 +1266,49 @@
                 this.renderGuessBoard();
                 this.renderColorPalette();
                 this.updateSubmitButton();
+            }
+
+            getStoredStats() {
+                const stored = localStorage.getItem('dailyCodeStats');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                return {
+                    gamesPlayed: 0,
+                    gamesWon: 0,
+                    currentStreak: 0,
+                    maxStreak: 0,
+                    totalGuesses: 0,
+                    avgGuesses: '-',
+                    winRate: 0
+                };
+            }
+
+            saveGameStats() {
+                const stats = this.getStoredStats();
+                stats.gamesPlayed++;
+                
+                if (this.gameWon) {
+                    stats.gamesWon++;
+                    stats.totalGuesses += this.guesses.length;
+                    stats.currentStreak++;
+                    stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
+                    stats.avgGuesses = (stats.totalGuesses / stats.gamesWon).toFixed(1);
+                } else {
+                    stats.currentStreak = 0;
+                }
+                
+                stats.winRate = Math.round((stats.gamesWon / stats.gamesPlayed) * 100);
+                
+                localStorage.setItem('dailyCodeStats', JSON.stringify(stats));
+            }
+
+            loadStats() {
+                const stats = this.getStoredStats();
+                document.getElementById('current-streak').textContent = stats.currentStreak;
+                document.getElementById('max-streak').textContent = stats.maxStreak;
+                document.getElementById('games-played').textContent = stats.gamesPlayed;
+                document.getElementById('avg-guesses').textContent = stats.avgGuesses;
             }
         }
 
