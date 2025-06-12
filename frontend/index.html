@@ -140,6 +140,16 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
+        .color-btn.eliminated {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .color-btn.eliminated:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
         .controls {
             display: flex;
             gap: 10px;
@@ -173,15 +183,6 @@
 
         .btn-secondary:hover:not(:disabled) {
             background: #545b62;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #218838;
         }
 
         .btn:disabled {
@@ -257,62 +258,21 @@
             border-color: #007bff;
         }
 
-        /* Stats Page Styles */
-        .stats-container {
-            text-align: center;
-            color: white;
-        }
-
-        .completion-message {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .completion-message.won {
-            color: #28a745;
-        }
-
-        .completion-message.lost {
-            color: #dc3545;
-        }
-
-        .solution-display {
-            margin-bottom: 30px;
-        }
-
-        .solution-label {
-            color: #ccc;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .solution-code {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .solution-slot {
-            width: 60px;
-            height: 60px;
-            border: 3px solid #fff;
-            border-radius: 50%;
-            background: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-        }
-
-        .stats-grid {
+        .stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+
+        .hint-section {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .hint-section .btn {
+            background: #ffc107;
+            color: black;
         }
 
         .stat-card {
@@ -335,57 +295,12 @@
             margin-top: 5px;
         }
 
-        .share-section {
-            background: #222;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #444;
-            margin-bottom: 20px;
-        }
-
-        .share-title {
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            color: #ccc;
-        }
-
-        .emoji-grid {
-            font-family: monospace;
-            font-size: 1.2em;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #111;
-            border-radius: 4px;
-            white-space: pre;
-        }
-
-        .play-again-btn {
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .fastest-time {
-            background: #2d2d2d;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #ffc107;
-        }
-
-        .fastest-time .stat-value {
-            color: #ffc107;
-        }
-
-        .hidden {
-            display: none;
-        }
-
         @media (max-width: 480px) {
             .game-container {
                 padding: 20px;
             }
-            .stats-grid {
+            
+            .stats {
                 grid-template-columns: 1fr;
             }
         }
@@ -393,87 +308,57 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- Game View -->
-        <div id="game-view">
-            <div class="header">
-                <h1 class="title">Daily Code</h1>
-                <div class="header-row">
-                    <div class="duplicates-container">
-                        <span class="duplicates-label">Duplicates</span>
-                        <div class="toggle" id="duplicates-toggle">
-                            <div class="toggle-slider"></div>
-                        </div>
-                    </div>
-                    <div class="puzzle-info">
-                        <div id="puzzle-number">Puzzle #1</div>
-                        <div id="date-info"></div>
+        <div class="header">
+            <h1 class="title">Daily Code</h1>
+            <div class="header-row">
+                <div class="duplicates-container">
+                    <span class="duplicates-label">Duplicates</span>
+                    <div class="toggle" id="duplicates-toggle">
+                        <div class="toggle-slider"></div>
                     </div>
                 </div>
+                <div class="puzzle-info">
+                    <div id="puzzle-number">Puzzle #1</div>
+                    <div id="date-info"></div>
+                </div>
             </div>
-
-            <div class="timer-info">
-                <span>Guess: <span id="guess-count">1</span>/10</span>
-                <span>Time: <span id="timer">00:00</span></span>
-            </div>
-
-            <div class="color-palette" id="color-palette"></div>
-
-            <div class="controls">
-                <button class="btn btn-secondary" id="clear-btn">Clear</button>
-                <button class="btn btn-primary" id="submit-btn" disabled>Submit Guess</button>
-            </div>
-
-            <div class="guess-board" id="guess-board"></div>
         </div>
 
-        <!-- Stats View -->
-        <div id="stats-view" class="stats-container hidden">
-            <div class="completion-message" id="completion-message"></div>
-            
-            <div class="solution-display">
-                <div class="solution-label">Today's Code:</div>
-                <div class="solution-code" id="solution-code"></div>
-            </div>
+        <div class="timer-info">
+            <span>Guess: <span id="guess-count">1</span>/10</span>
+            <span>Time: <span id="timer">00:00</span></span>
+        </div>
 
-            <div class="fastest-time stat-card">
-                <div class="stat-value" id="fastest-time">--:--</div>
-                <div class="stat-label">Fastest Time Today</div>
-            </div>
+        <div class="hint-section" id="hint-section" style="display: none;">
+            <button class="btn btn-secondary" id="hint-btn">Use Hint (Eliminate 1 Number)</button>
+        </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="players-today">0</div>
-                    <div class="stat-label">Players Today</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="current-streak">0</div>
-                    <div class="stat-label">Current Streak</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="max-streak">0</div>
-                    <div class="stat-label">Max Streak</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="avg-guesses">-</div>
-                    <div class="stat-label">Avg Guesses</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="games-played">0</div>
-                    <div class="stat-label">Games Played</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="win-rate">0%</div>
-                    <div class="stat-label">Win Rate</div>
-                </div>
-            </div>
+        <div class="color-palette" id="color-palette"></div>
 
-            <div class="share-section">
-                <div class="share-title">Share Your Result</div>
-                <div class="emoji-grid" id="emoji-grid"></div>
-                <button class="btn btn-success" id="copy-btn">Copy to Clipboard</button>
-            </div>
+        <div class="controls">
+            <button class="btn btn-secondary" id="clear-btn">Clear</button>
+            <button class="btn btn-primary" id="submit-btn" disabled>Submit Guess</button>
+        </div>
 
-            <button class="btn btn-primary play-again-btn" id="play-again-btn">Play Tomorrow's Puzzle</button>
+        <div class="guess-board" id="guess-board"></div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="current-streak">0</div>
+                <div class="stat-label">Current Streak</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="max-streak">0</div>
+                <div class="stat-label">Max Streak</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avg-guesses">-</div>
+                <div class="stat-label">Avg Guesses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="games-played">0</div>
+                <div class="stat-label">Games Played</div>
+            </div>
         </div>
     </div>
 
@@ -492,29 +377,29 @@
                 this.secretCode = [];
                 this.currentGuess = [null, null, null, null];
                 this.guesses = [];
-                this.feedbackHistory = [];
                 this.gameOver = false;
                 this.gameWon = false;
                 this.startTime = Date.now();
-                this.endTime = null;
                 this.duplicatesAllowed = false;
+                this.hintsUsed = 0;
+                this.eliminatedColors = new Set();
                 this.currentRow = 0;
-                this.timerInterval = null;
                 
                 this.initializeGame();
                 this.setupEventListeners();
                 this.updateDisplay();
                 this.startTimer();
-                this.checkIfAlreadyPlayed();
+                this.loadStats();
             }
 
             generateDailyCode() {
                 const today = new Date();
                 const dateString = today.toISOString().split('T')[0];
                 const seed = this.hashCode(dateString);
-                const rng = this.seededRandom(seed);
                 
+                const rng = this.seededRandom(seed);
                 const code = [];
+                
                 for (let i = 0; i < 4; i++) {
                     const availableNumbers = this.duplicatesAllowed ? 
                         this.numbers : 
@@ -582,19 +467,15 @@
                     this.submitGuess();
                 });
 
-                document.getElementById('copy-btn').addEventListener('click', () => {
-                    this.copyToClipboard();
-                });
-
-                document.getElementById('play-again-btn').addEventListener('click', () => {
-                    alert("Come back tomorrow for a new puzzle!");
+                document.getElementById('hint-btn').addEventListener('click', () => {
+                    this.useHint();
                 });
             }
 
             renderGuessBoard() {
                 const board = document.getElementById('guess-board');
                 board.innerHTML = '';
-                
+
                 for (let row = 0; row < 10; row++) {
                     const rowDiv = document.createElement('div');
                     rowDiv.className = 'guess-row';
@@ -631,26 +512,48 @@
             }
 
             renderColorPalette() {
+                console.log('Creating number palette...');
                 const palette = document.getElementById('color-palette');
                 palette.innerHTML = '';
-                
-                this.numbers.forEach((number) => {
+
+                this.numbers.forEach((number, index) => {
                     const btn = document.createElement('button');
                     btn.className = 'color-btn';
                     btn.textContent = number.value;
+                    
                     btn.addEventListener('click', () => {
+                        console.log('Number clicked:', number.value);
                         this.selectNumber(number);
                     });
+                    
                     palette.appendChild(btn);
+                });
+
+                this.updateNumberPalette();
+            }
+
+            updateNumberPalette() {
+                const buttons = document.querySelectorAll('.color-btn');
+                buttons.forEach((btn, index) => {
+                    const number = this.numbers[index];
+                    btn.classList.toggle('eliminated', this.eliminatedColors.has(number.name));
                 });
             }
 
             selectNumber(number) {
-                if (this.gameOver) return;
+                console.log('selectNumber called with:', number.value);
                 
+                if (this.gameOver || this.eliminatedColors.has(number.name)) {
+                    console.log('Blocked: game over or eliminated');
+                    return;
+                }
+
                 const emptySlot = this.currentGuess.findIndex(slot => slot === null);
+                console.log('Empty slot at index:', emptySlot);
+                
                 if (emptySlot !== -1) {
                     this.currentGuess[emptySlot] = number;
+                    console.log('Added number, currentGuess now:', this.currentGuess);
                     this.updateCurrentRowDisplay();
                     this.updateSubmitButton();
                 }
@@ -683,6 +586,7 @@
                         const slot = document.getElementById(`guess-${this.currentRow}-${col}`);
                         if (slot) {
                             const number = this.currentGuess[col];
+                            
                             if (number) {
                                 slot.classList.add('filled');
                                 slot.classList.remove('active');
@@ -712,14 +616,13 @@
 
             submitGuess() {
                 if (this.gameOver || this.currentGuess.some(slot => slot === null)) return;
-                
+
                 const guess = [...this.currentGuess];
                 this.guesses.push(guess);
-                
+
                 const feedback = this.getFeedback(guess);
-                this.feedbackHistory.push(feedback);
                 this.displayGuess(this.currentRow, guess, feedback);
-                
+
                 if (feedback.every(f => f === 'correct')) {
                     this.endGame(true);
                 } else if (this.guesses.length >= 10) {
@@ -730,6 +633,37 @@
                     this.updateCurrentRowDisplay();
                     this.updateSubmitButton();
                     this.updateGuessCount();
+                    this.checkHintAvailability();
+                }
+            }
+
+            checkHintAvailability() {
+                const hintSection = document.getElementById('hint-section');
+                const hintBtn = document.getElementById('hint-btn');
+                
+                if (this.guesses.length >= 5 && this.hintsUsed === 0) {
+                    hintSection.style.display = 'block';
+                } else {
+                    hintBtn.disabled = this.hintsUsed > 0;
+                }
+            }
+
+            useHint() {
+                if (this.hintsUsed > 0 || this.gameOver) return;
+
+                const incorrectNumbers = this.numbers.filter(number => 
+                    !this.secretCode.some(secret => secret.name === number.name) &&
+                    !this.eliminatedColors.has(number.name)
+                );
+
+                if (incorrectNumbers.length > 0) {
+                    const randomIncorrect = incorrectNumbers[Math.floor(Math.random() * incorrectNumbers.length)];
+                    this.eliminatedColors.add(randomIncorrect.name);
+                    this.hintsUsed++;
+                    this.updateNumberPalette();
+                    
+                    document.getElementById('hint-btn').disabled = true;
+                    document.getElementById('hint-btn').textContent = 'Hint Used';
                 }
             }
 
@@ -737,7 +671,7 @@
                 const feedback = [];
                 const secretCopy = [...this.secretCode];
                 const guessCopy = [...guess];
-                
+
                 // First pass: mark correct positions
                 for (let i = 0; i < 4; i++) {
                     if (guessCopy[i].name === secretCopy[i].name) {
@@ -746,7 +680,7 @@
                         guessCopy[i] = null;
                     }
                 }
-                
+
                 // Second pass: mark wrong positions
                 for (let i = 0; i < 4; i++) {
                     if (guessCopy[i] !== null) {
@@ -759,7 +693,7 @@
                         }
                     }
                 }
-                
+
                 return feedback;
             }
 
@@ -775,8 +709,8 @@
                 // Display feedback dots
                 const feedbackContainer = document.getElementById(`feedback-${rowIndex}`);
                 feedbackContainer.style.visibility = 'visible';
-                
                 const dots = feedbackContainer.querySelectorAll('.feedback-dot');
+                
                 const sortedFeedback = [...feedback].sort((a, b) => {
                     if (a === 'correct' && b !== 'correct') return -1;
                     if (b === 'correct' && a !== 'correct') return 1;
@@ -799,243 +733,11 @@
             endGame(won) {
                 this.gameOver = true;
                 this.gameWon = won;
-                this.endTime = Date.now();
                 
-                if (this.timerInterval) {
-                    clearInterval(this.timerInterval);
-                }
-                
-                this.saveGameStats();
-                this.showStatsPage();
-            }
-
-            showStatsPage() {
-                document.getElementById('game-view').classList.add('hidden');
-                document.getElementById('stats-view').classList.remove('hidden');
-                
-                // Set completion message
-                const message = document.getElementById('completion-message');
-                if (this.gameWon) {
-                    message.textContent = `Congratulations! You solved it in ${this.guesses.length} guesses!`;
-                    message.className = 'completion-message won';
+                if (won) {
+                    alert(`Congratulations! You solved it in ${this.guesses.length} guesses!`);
                 } else {
-                    message.textContent = 'Better luck tomorrow!';
-                    message.className = 'completion-message lost';
-                }
-                
-                // Display solution
-                const solutionContainer = document.getElementById('solution-code');
-                solutionContainer.innerHTML = '';
-                this.secretCode.forEach(num => {
-                    const slot = document.createElement('div');
-                    slot.className = 'solution-slot';
-                    slot.textContent = num.value;
-                    solutionContainer.appendChild(slot);
-                });
-                
-                // Load and display stats
-                this.displayStats();
-                
-                // Generate share text
-                this.generateShareText();
-            }
-
-            saveGameStats() {
-                const today = new Date().toISOString().split('T')[0];
-                const gameTime = Math.floor((this.endTime - this.startTime) / 1000);
-                
-                let stats = this.getStoredStats();
-                
-                // Update games played
-                stats.gamesPlayed++;
-                
-                // Update games won
-                if (this.gameWon) {
-                    stats.gamesWon++;
-                    stats.totalGuesses += this.guesses.length;
-                    
-                    // Update streaks
-                    if (stats.lastPlayDate === this.getYesterdayDate()) {
-                        stats.currentStreak++;
-                    } else {
-                        stats.currentStreak = 1;
-                    }
-                    stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
-                } else {
-                    stats.currentStreak = 0;
-                }
-                
-                stats.lastPlayDate = today;
-                
-                // Save today's game data
-                const todayData = this.getTodayData();
-                todayData.played = true;
-                todayData.won = this.gameWon;
-                todayData.guesses = this.guesses.length;
-                todayData.time = gameTime;
-                todayData.playersCount++;
-                
-                if (this.gameWon && (todayData.fastestTime === null || gameTime < todayData.fastestTime)) {
-                    todayData.fastestTime = gameTime;
-                }
-                
-                this.saveTodayData(todayData);
-                localStorage.setItem('dailyCodeStats', JSON.stringify(stats));
-            }
-
-            getStoredStats() {
-                const stored = localStorage.getItem('dailyCodeStats');
-                if (stored) {
-                    return JSON.parse(stored);
-                }
-                return {
-                    gamesPlayed: 0,
-                    gamesWon: 0,
-                    currentStreak: 0,
-                    maxStreak: 0,
-                    totalGuesses: 0,
-                    lastPlayDate: null
-                };
-            }
-
-            getTodayData() {
-                const today = new Date().toISOString().split('T')[0];
-                const stored = localStorage.getItem(`dailyCode_${today}`);
-                if (stored) {
-                    return JSON.parse(stored);
-                }
-                return {
-                    date: today,
-                    played: false,
-                    won: false,
-                    guesses: 0,
-                    time: null,
-                    playersCount: 0,
-                    fastestTime: null
-                };
-            }
-
-            saveTodayData(data) {
-                const today = new Date().toISOString().split('T')[0];
-                localStorage.setItem(`dailyCode_${today}`, JSON.stringify(data));
-            }
-
-            getYesterdayDate() {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                return yesterday.toISOString().split('T')[0];
-            }
-
-            displayStats() {
-                const stats = this.getStoredStats();
-                const todayData = this.getTodayData();
-                
-                document.getElementById('current-streak').textContent = stats.currentStreak;
-                document.getElementById('max-streak').textContent = stats.maxStreak;
-                document.getElementById('games-played').textContent = stats.gamesPlayed;
-                document.getElementById('players-today').textContent = todayData.playersCount;
-                
-                // Calculate average guesses
-                if (stats.gamesWon > 0) {
-                    const avgGuesses = (stats.totalGuesses / stats.gamesWon).toFixed(1);
-                    document.getElementById('avg-guesses').textContent = avgGuesses;
-                } else {
-                    document.getElementById('avg-guesses').textContent = '-';
-                }
-                
-                // Calculate win rate
-                if (stats.gamesPlayed > 0) {
-                    const winRate = Math.round((stats.gamesWon / stats.gamesPlayed) * 100);
-                    document.getElementById('win-rate').textContent = `${winRate}%`;
-                } else {
-                    document.getElementById('win-rate').textContent = '0%';
-                }
-                
-                // Display fastest time
-                if (todayData.fastestTime !== null) {
-                    const minutes = Math.floor(todayData.fastestTime / 60);
-                    const seconds = todayData.fastestTime % 60;
-                    document.getElementById('fastest-time').textContent = 
-                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                } else {
-                    document.getElementById('fastest-time').textContent = '--:--';
-                }
-            }
-
-            generateShareText() {
-                const today = new Date();
-                const startDate = new Date('2024-01-01');
-                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-                const puzzleNumber = daysDiff + 1;
-                
-                let shareText = `Daily Code #${puzzleNumber} ${this.gameWon ? this.guesses.length : 'X'}/10\n\n`;
-                
-                // Generate emoji grid
-                this.feedbackHistory.forEach(feedback => {
-                    feedback.forEach(result => {
-                        if (result === 'correct') {
-                            shareText += '🟩';
-                        } else if (result === 'wrong-position') {
-                            shareText += '🟨';
-                        } else {
-                            shareText += '⬜';
-                        }
-                    });
-                    shareText += '\n';
-                });
-                
-                document.getElementById('emoji-grid').textContent = shareText;
-            }
-
-            copyToClipboard() {
-                const shareText = document.getElementById('emoji-grid').textContent;
-                
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(shareText).then(() => {
-                        const copyBtn = document.getElementById('copy-btn');
-                        const originalText = copyBtn.textContent;
-                        copyBtn.textContent = 'Copied!';
-                        setTimeout(() => {
-                            copyBtn.textContent = originalText;
-                        }, 2000);
-                    }).catch(() => {
-                        this.fallbackCopyToClipboard(shareText);
-                    });
-                } else {
-                    this.fallbackCopyToClipboard(shareText);
-                }
-            }
-
-            fallbackCopyToClipboard(text) {
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-999999px';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                
-                try {
-                    document.execCommand('copy');
-                    const copyBtn = document.getElementById('copy-btn');
-                    const originalText = copyBtn.textContent;
-                    copyBtn.textContent = 'Copied!';
-                    setTimeout(() => {
-                        copyBtn.textContent = originalText;
-                    }, 2000);
-                } catch (err) {
-                    console.error('Failed to copy text:', err);
-                }
-                
-                document.body.removeChild(textArea);
-            }
-
-            checkIfAlreadyPlayed() {
-                const todayData = this.getTodayData();
-                if (todayData.played) {
-                    this.gameOver = true;
-                    this.gameWon = todayData.won;
-                    this.showStatsPage();
+                    alert('Game Over! Better luck tomorrow!');
                 }
             }
 
@@ -1044,7 +746,7 @@
             }
 
             startTimer() {
-                this.timerInterval = setInterval(() => {
+                setInterval(() => {
                     if (!this.gameOver) {
                         const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
                         const minutes = Math.floor(elapsed / 60);
@@ -1055,38 +757,46 @@
                 }, 1000);
             }
 
+            getStats() {
+                return {
+                    gamesPlayed: 0,
+                    gamesWon: 0,
+                    currentStreak: 0,
+                    maxStreak: 0,
+                    totalGuesses: 0
+                };
+            }
+
+            loadStats() {
+                const stats = this.getStats();
+                document.getElementById('current-streak').textContent = stats.currentStreak;
+                document.getElementById('max-streak').textContent = stats.maxStreak;
+                document.getElementById('games-played').textContent = stats.gamesPlayed;
+                document.getElementById('avg-guesses').textContent = '-';
+            }
+
             updateDisplay() {
                 this.renderColorPalette();
                 this.updateCurrentRowDisplay();
             }
 
             restartGame() {
-                // Check if already played today
-                const todayData = this.getTodayData();
-                if (todayData.played) {
-                    alert("You've already played today's puzzle! Come back tomorrow for a new one.");
-                    return;
-                }
-                
                 this.secretCode = this.generateDailyCode();
                 this.currentGuess = [null, null, null, null];
                 this.guesses = [];
-                this.feedbackHistory = [];
                 this.gameOver = false;
                 this.gameWon = false;
                 this.startTime = Date.now();
+                this.hintsUsed = 0;
+                this.eliminatedColors.clear();
                 this.currentRow = 0;
                 
                 document.getElementById('guess-count').textContent = '1';
+                document.getElementById('hint-section').style.display = 'none';
                 
                 this.renderGuessBoard();
                 this.renderColorPalette();
                 this.updateSubmitButton();
-                
-                if (this.timerInterval) {
-                    clearInterval(this.timerInterval);
-                }
-                this.startTimer();
             }
         }
 
