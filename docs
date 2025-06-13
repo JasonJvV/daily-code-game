@@ -1171,7 +1171,7 @@
                     shareText += '\n';
                 });
                 
-                shareText += '\nPlay at: https://yourgameurl.com';
+                shareText += '\nPlay at: https://JasonJvV.github.io/daily-code-game/frontend/';
                 
                 document.getElementById('emoji-grid').textContent = shareText;
             }
