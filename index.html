@@ -598,6 +598,7 @@
                 this.hintsUsed = 0;
                 this.eliminatedColors = new Set();
                 this.currentRow = 0;
+                this.selectedSlot = null;  // Track which slot user clicked
                 this.playerId = getPlayerId();
                 
                 this.initializeGame();
@@ -787,10 +788,17 @@
                     return;
                 }
 
-                const emptySlot = this.currentGuess.findIndex(slot => slot === null);
+                // Use selected slot if one is selected, otherwise find first empty
+                let targetSlot;
+                if (this.selectedSlot !== null && this.currentGuess[this.selectedSlot] === null) {
+                    targetSlot = this.selectedSlot;
+                } else {
+                    targetSlot = this.currentGuess.findIndex(slot => slot === null);
+                }
                 
-                if (emptySlot !== -1) {
-                    this.currentGuess[emptySlot] = number;
+                if (targetSlot !== -1) {
+                    this.currentGuess[targetSlot] = number;
+                    this.selectedSlot = null;  // Clear selection after placing
                     this.updateCurrentRowDisplay();
                     this.updateSubmitButton();
                 }
@@ -798,11 +806,17 @@
 
             onSlotClick(row, col) {
                 if (this.gameOver || row !== this.currentRow) return;
-                
-                if (this.currentGuess[col] !== null) {
+    
+                 if (this.currentGuess[col] !== null) {
+                // Clicking a filled slot clears it
                     this.currentGuess[col] = null;
+                    this.selectedSlot = null;
                     this.updateCurrentRowDisplay();
                     this.updateSubmitButton();
+                } else {
+                    // Clicking an empty slot selects it
+                    this.selectedSlot = col;
+                    this.updateCurrentRowDisplay();
                 }
             }
 
