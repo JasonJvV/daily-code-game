@@ -263,6 +263,12 @@
             border-style: dashed;
         }
 
+        .guess-slot.selected {
+            border-color: #dc3545;
+            border-style: solid;
+            border-width: 3px;
+        }
+
         .guess-slot:hover {
             border-color: #007bff;
         }
@@ -821,18 +827,27 @@
             }
 
             updateCurrentRowDisplay() {
-                // Clear all active states
+                // Clear all active and selected states
                 for (let row = 0; row < 10; row++) {
                     for (let col = 0; col < 4; col++) {
                         const slot = document.getElementById(`guess-${row}-${col}`);
                         if (slot) {
                             slot.classList.remove('active');
+                            slot.classList.remove('selected');
                         }
                     }
                 }
                 
                 // Only highlight current row
                 if (!this.gameOver && this.currentRow < 10) {
+                    // First, determine which slot will receive the next number
+                    let nextSlot;
+                    if (this.selectedSlot !== null && this.currentGuess[this.selectedSlot] === null) {
+                        nextSlot = this.selectedSlot;
+                    } else {
+                        nextSlot = this.currentGuess.findIndex(slot => slot === null);
+                    }
+                    
                     for (let col = 0; col < 4; col++) {
                         const slot = document.getElementById(`guess-${this.currentRow}-${col}`);
                         if (slot) {
@@ -841,11 +856,20 @@
                             if (number) {
                                 slot.classList.add('filled');
                                 slot.classList.remove('active');
+                                slot.classList.remove('selected');
                                 slot.textContent = number.value;
                             } else {
                                 slot.classList.remove('filled');
-                                slot.classList.add('active');
                                 slot.textContent = '';
+                                
+                                // Apply red border to next slot, blue dotted to others
+                                if (col === nextSlot) {
+                                    slot.classList.add('selected');
+                                    slot.classList.remove('active');
+                                } else {
+                                    slot.classList.add('active');
+                                    slot.classList.remove('selected');
+                                }
                             }
                         }
                     }
