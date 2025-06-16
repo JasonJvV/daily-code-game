@@ -489,6 +489,8 @@
 
             <div class="guess-board" id="guess-board"></div>
 
+            <button class="btn btn-primary" id="view-stats-btn" style="width: 100%; margin-bottom: 20px; display: none;">View Stats</button>
+
             <div class="stats" id="stats">
                 <div class="stat-card">
                     <div class="stat-value" id="current-streak">0</div>
@@ -563,7 +565,8 @@
                 <button class="btn btn-success" id="copy-btn">Copy to Clipboard</button>
             </div>
 
-            <button class="btn btn-primary play-again-btn" id="play-again-btn">Play Tomorrow's Puzzle</button>
+            <button class="btn btn-secondary" id="back-to-code-btn" style="margin-top: 15px;">Back to Code</button>
+            
         </div>
     </div>
 
@@ -718,9 +721,14 @@
                     this.copyToClipboard();
                 });
 
-                document.getElementById('play-again-btn').addEventListener('click', () => {
-                    alert("Come back tomorrow for a new puzzle!");
+                document.getElementById('back-to-code-btn').addEventListener('click', () => {
+                    this.showGameBoard();
                 });
+
+                document.getElementById('view-stats-btn').addEventListener('click', () => {
+                    this.showStatsPage();
+                });
+
             }
 
             renderGuessBoard() {
@@ -838,8 +846,8 @@
                     }
                 }
                 
-                // Only highlight current row
-                if (!this.gameOver && this.currentRow < 10) {
+                // Only highlight current row (or show completed game if game is over)
+                    if (this.currentRow < 10) {
                     // First, determine which slot will receive the next number
                     let nextSlot;
                     if (this.selectedSlot !== null && this.currentGuess[this.selectedSlot] === null) {
@@ -1304,6 +1312,18 @@
                 this.renderGuessBoard();
                 this.renderColorPalette();
                 this.updateSubmitButton();
+            }
+
+            showGameBoard() {
+                // Hide stats view and show game view
+                document.getElementById('stats-view').classList.add('hidden');
+                document.getElementById('game-view').classList.remove('hidden');
+                
+                // Show the View Stats button since game is over
+                document.getElementById('view-stats-btn').style.display = 'block';
+                
+                // Hide the game stats cards at bottom since we're in review mode
+                document.getElementById('stats').style.display = 'none';
             }
 
             getStoredStats() {
