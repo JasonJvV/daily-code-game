@@ -242,73 +242,40 @@ app.post('/api/game/submit', async (req, res) => {
             await updateLeaderboards(date, player, won, guesses, time);
         }
         
-       // Calculate player's rank for today
-        let playerRank = 1;
-        const todaysGames = await Player.aggregate([
-            {
-                $match: {
-                    'games.date': today,
-                    'games.won': true
-                }
-            },
-            {
-                $unwind: '$games'
-            },
-            {
-                $match: {
-                    'games.date': today,
-                    'games.won': true
-                }
-            },
-            {
-                $sort: {
-                    'games.time': 1,
-                    'games.guesses': 1
-                }
-            }
-        ]);
-        
-        // Find player's position
-        for (let i = 0; i < todaysGames.length; i++) {
-            if (todaysGames[i]._id.toString() === player._id.toString() && 
-                todaysGames[i].games.time === gameTime) {
-                playerRank = i + 1;
-                break;
-            }
-        }
-        
         // Calculate player's rank for today
         let playerRank = 1;
-        const todaysGames = await Player.aggregate([
-            {
-                $match: {
-                    'games.date': today,
-                    'games.won': true
+        if (won) {
+            const todaysGames = await Player.aggregate([
+                {
+                    $match: {
+                        'games.date': date,
+                        'games.won': true
+                    }
+                },
+                {
+                    $unwind: '$games'
+                },
+                {
+                    $match: {
+                        'games.date': date,
+                        'games.won': true
+                    }
+                },
+                {
+                    $sort: {
+                        'games.time': 1,
+                        'games.guesses': 1
+                    }
                 }
-            },
-            {
-                $unwind: '$games'
-            },
-            {
-                $match: {
-                    'games.date': today,
-                    'games.won': true
+            ]);
+            
+            // Find player's position
+            for (let i = 0; i < todaysGames.length; i++) {
+                if (todaysGames[i]._id.toString() === player._id.toString() && 
+                    todaysGames[i].games.time === time) {
+                    playerRank = i + 1;
+                    break;
                 }
-            },
-            {
-                $sort: {
-                    'games.time': 1,
-                    'games.guesses': 1
-                }
-            }
-        ]);
-        
-        // Find player's position
-        for (let i = 0; i < todaysGames.length; i++) {
-            if (todaysGames[i]._id.toString() === player._id.toString() && 
-                todaysGames[i].games.time === gameTime) {
-                playerRank = i + 1;
-                break;
             }
         }
         
@@ -323,6 +290,10 @@ app.post('/api/game/submit', async (req, res) => {
             },
             rank: playerRank
         });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // Get player stats
 app.get('/api/player/:playerId/stats', async (req, res) => {
