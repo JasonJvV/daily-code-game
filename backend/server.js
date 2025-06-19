@@ -242,6 +242,76 @@ app.post('/api/game/submit', async (req, res) => {
             await updateLeaderboards(date, player, won, guesses, time);
         }
         
+       // Calculate player's rank for today
+        let playerRank = 1;
+        const todaysGames = await Player.aggregate([
+            {
+                $match: {
+                    'games.date': today,
+                    'games.won': true
+                }
+            },
+            {
+                $unwind: '$games'
+            },
+            {
+                $match: {
+                    'games.date': today,
+                    'games.won': true
+                }
+            },
+            {
+                $sort: {
+                    'games.time': 1,
+                    'games.guesses': 1
+                }
+            }
+        ]);
+        
+        // Find player's position
+        for (let i = 0; i < todaysGames.length; i++) {
+            if (todaysGames[i]._id.toString() === player._id.toString() && 
+                todaysGames[i].games.time === gameTime) {
+                playerRank = i + 1;
+                break;
+            }
+        }
+        
+        // Calculate player's rank for today
+        let playerRank = 1;
+        const todaysGames = await Player.aggregate([
+            {
+                $match: {
+                    'games.date': today,
+                    'games.won': true
+                }
+            },
+            {
+                $unwind: '$games'
+            },
+            {
+                $match: {
+                    'games.date': today,
+                    'games.won': true
+                }
+            },
+            {
+                $sort: {
+                    'games.time': 1,
+                    'games.guesses': 1
+                }
+            }
+        ]);
+        
+        // Find player's position
+        for (let i = 0; i < todaysGames.length; i++) {
+            if (todaysGames[i]._id.toString() === player._id.toString() && 
+                todaysGames[i].games.time === gameTime) {
+                playerRank = i + 1;
+                break;
+            }
+        }
+        
         res.json({
             success: true,
             stats: player.stats,
@@ -250,12 +320,9 @@ app.post('/api/game/submit', async (req, res) => {
                 completedPlayers: puzzle.completedPlayers,
                 fastestTime: puzzle.fastestTime,
                 averageGuesses: puzzle.averageGuesses
-            }
+            },
+            rank: playerRank
         });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
 
 // Get player stats
 app.get('/api/player/:playerId/stats', async (req, res) => {
