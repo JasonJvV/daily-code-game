@@ -527,6 +527,12 @@
                 <div class="stat-value" id="fastest-time-today">--:--</div>
                 <div class="stat-label">Fastest Time Today</div>
             </div>
+            
+            <div class="stat-card" style="background: #2d2d2d; border: 1px solid #007bff; margin-bottom: 20px;">
+                <div class="stat-label" style="color: #007bff; margin-bottom: 10px;">Your Ranking</div>
+                <div class="stat-value" id="player-rank" style="color: #007bff;">-</div>
+                <div class="stat-value" id="player-rank-time" style="color: #007bff; font-size: 1.2em;">--:--</div>
+            </div>
 
             <div class="stats" id="final-stats">
                 <div class="stat-card">
@@ -1083,12 +1089,27 @@
                         const data = await response.json();
                         this.playerStats = data.stats;
                         this.todayStats = data.todayStats;
+                        this.playerRank = data.rank;
                     }
                 } catch (error) {
                     console.log('Stats will be updated when connection is restored');
                 }
             }
 
+            getOrdinalSuffix(rank) {
+                const j = rank % 10;
+                const k = rank % 100;
+                if (j === 1 && k !== 11) {
+                    return rank + "st";
+                }
+                if (j === 2 && k !== 12) {
+                    return rank + "nd";
+                }
+                if (j === 3 && k !== 13) {
+                    return rank + "rd";
+                }
+                return rank + "th";
+            }
             async showStatsPage() {
                 document.getElementById('game-view').classList.add('hidden');
                 document.getElementById('stats-view').classList.remove('hidden');
@@ -1149,6 +1170,17 @@
                             const seconds = puzzleData.fastestTime % 60;
                             document.getElementById('fastest-time-today').textContent = 
                                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        }
+                        // Display player ranking
+                        if (this.playerRank) {
+                            document.getElementById('player-rank').textContent = this.getOrdinalSuffix(this.playerRank);
+                            
+                            const gameTime = Math.floor((this.endTime - this.startTime) / 1000);
+                            const minutes = Math.floor(gameTime / 60);
+                            const seconds = gameTime % 60;
+                            const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                            const asterisk = this.hintsUsed > 0 ? '*' : '';
+                            document.getElementById('player-rank-time').textContent = timeString + asterisk;
                         }
                     }
                 } catch (error) {
