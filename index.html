@@ -564,7 +564,7 @@
             <div class="share-section">
                 <div class="share-title">Share Your Result</div>
                 <div class="emoji-grid" id="emoji-grid"></div>
-                <button class="btn btn-success" id="copy-btn">Copy to Clipboard</button>
+                <button class="btn btn-success" id="share-btn">Share Results</button>
             </div>
 
             <button class="btn btn-primary" id="back-to-code-btn" style="margin-top: 15px;">Back to Game</button>
@@ -719,8 +719,8 @@
                     this.useHint();
                 });
 
-                document.getElementById('copy-btn').addEventListener('click', () => {
-                    this.copyToClipboard();
+               document.getElementById('share-btn').addEventListener('click', () => {
+                     this.shareResults();
                 });
 
                 document.getElementById('back-to-code-btn').addEventListener('click', () => {
@@ -1248,6 +1248,46 @@
                 shareText += '\nPlay at: https://jasonjvv.github.io/daily-code-game/';
                 
                 document.getElementById('emoji-grid').textContent = shareText;
+                return shareText;
+            }
+            shareResults() {
+                const shareText = this.generateShareText();
+                const gameUrl = 'https://jasonjvv.github.io/daily-code-game';
+                
+                // Check if Web Share API is available
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Daily Code Game',
+                        text: shareText + '\n\n🎮 Play Here: ',
+                        url: gameUrl
+                    }).then(() => {
+                        console.log('Thanks for sharing!');
+                    }).catch((error) => {
+                        console.log('Error sharing:', error);
+                        this.fallbackShare(shareText, gameUrl);
+                    });
+                } else {
+                    // Fallback for browsers that don't support Web Share API
+                    this.fallbackShare(shareText, gameUrl);
+                }
+            }
+
+            fallbackShare(shareText, gameUrl) {
+                // For desktop or browsers without share API, copy to clipboard
+                const fullText = shareText + '\n\n🎮 Play Here: ' + gameUrl;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(fullText).then(() => {
+                        const shareBtn = document.getElementById('share-btn');
+                        const originalText = shareBtn.textContent;
+                        shareBtn.textContent = 'Copied! Share on your favorite platform';
+                        setTimeout(() => {
+                            shareBtn.textContent = originalText;
+                        }, 3000);
+                    });
+                } else {
+                    this.fallbackCopyToClipboard(fullText);
+                }
             }
 
             copyToClipboard() {
