@@ -719,9 +719,12 @@
                     this.useHint();
                 });
 
-               document.getElementById('share-btn').addEventListener('click', () => {
-                     this.shareResults();
-                });
+               const shareBtn = document.getElementById('share-btn');
+                if (shareBtn) {
+                    shareBtn.addEventListener('click', () => {
+                        this.shareResults();
+                    });
+                }
 
                 document.getElementById('back-to-code-btn').addEventListener('click', () => {
                     this.showGameBoard();
@@ -1245,29 +1248,32 @@
                     shareText += '\n';
                 });
                 
-                shareText += '\nPlay at: https://jasonjvv.github.io/daily-code-game/';
+                // Display version for the UI (cleaner)
+                let displayText = shareText + '\n🎮 dailycodegame.com';
+                document.getElementById('emoji-grid').textContent = displayText;
                 
-                document.getElementById('emoji-grid').textContent = shareText;
+                // Return full version for actual sharing
                 return shareText;
             }
+            
             shareResults() {
                 const shareText = this.generateShareText();
-                const gameUrl = 'https://jasonjvv.github.io/daily-code-game';
+                const gameUrl = window.location.href.split('?')[0]; // Get current URL without params
                 
-                // Check if Web Share API is available
+                // Check if Web Share API is available (common on mobile)
                 if (navigator.share) {
                     navigator.share({
                         title: 'Daily Code Game',
-                        text: shareText + '\n\n🎮 Play Here: ',
+                        text: shareText,
                         url: gameUrl
-                    }).then(() => {
-                        console.log('Thanks for sharing!');
-                    }).catch((error) => {
-                        console.log('Error sharing:', error);
-                        this.fallbackShare(shareText, gameUrl);
+                    }).catch(err => {
+                        // If user cancels or error occurs, fall back to copy
+                        if (err.name !== 'AbortError') {
+                            this.fallbackShare(shareText, gameUrl);
+                        }
                     });
                 } else {
-                    // Fallback for browsers that don't support Web Share API
+                    // For desktop or browsers without share API
                     this.fallbackShare(shareText, gameUrl);
                 }
             }
