@@ -36,34 +36,45 @@
             margin-bottom: 20px;
         }
 
-        .header-row {
+       .header-row {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 15px;
             position: relative;
+        }
+
+        .faq-button {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-width: 60px;
+        }
+
+        .faq-button:hover {
+            background: #444;
+            border-color: #666;
+        }
+
+        .faq-button:active {
+            transform: scale(0.95);
         }
 
         .puzzle-info {
             color: #ccc;
             font-size: 0.95em;
             text-align: center;
+        }
+
+        .faq-button {
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 0;
-        }
-
-        .duplicates-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 5px;
-            z-index: 1;
-        }
-
-        .duplicates-label {
-            color: #ccc;
-            font-size: 0.9em;
+            left: 0;
         }
 
         .title {
@@ -72,35 +83,6 @@
             color: white;
             margin-bottom: 15px;
             text-align: center;
-        }
-
-        .toggle {
-            position: relative;
-            width: 35px;
-            height: 18px;
-            background: #ccc;
-            border-radius: 9px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .toggle.active {
-            background: #4CAF50;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 14px;
-            height: 14px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s;
-        }
-
-        .toggle.active .toggle-slider {
-            transform: translateX(17px);
         }
 
         .timer-info {
@@ -435,7 +417,168 @@
         .hidden {
             display: none;
         }
+/* FAQ Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
+        .modal-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #007bff;
+            margin: 0;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 2em;
+            cursor: pointer;
+            padding: 0;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            margin: -10px -10px -10px 0;
+        }
+
+        .close-button:hover {
+            background: #333;
+            color: white;
+        }
+
+        .faq-content h3 {
+            color: #007bff;
+            font-size: 1.1em;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .faq-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .faq-content p {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .faq-content ul {
+            margin: 10px 0;
+            padding-left: 25px;
+            color: #ccc;
+        }
+
+        .faq-content li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .faq-content strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        .indicator-example {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin: 0 4px 0 0;
+            vertical-align: middle;
+        }
+
+        .indicator-green {
+            background: #28a745;
+        }
+
+        .indicator-yellow {
+            background: #ffc107;
+        }
+
+        .indicator-gray {
+            background: #444;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal Scrollbar */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #222;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+        
         @media (max-width: 480px) {
             .game-container {
                 padding: 20px;
@@ -444,7 +587,35 @@
             .stats {
                 grid-template-columns: 1fr;
             }
+
+            .faq-button {
+                padding: 8px 15px;
+                font-size: 0.85em;
+            }
+
+            .modal-content {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .modal-header {
+                margin-bottom: 20px;
+            }
+
+            .modal-title {
+                font-size: 1.5em;
+            }
+
+            .faq-content h3 {
+                font-size: 1em;
+                margin-top: 20px;
+            }
+
+            .faq-content p, .faq-content li {
+                font-size: 0.95em;
+            }
         }
+
     </style>
 </head>
 <body>
@@ -454,16 +625,12 @@
             <div class="header">
                 <h1 class="title">Daily Code</h1>
                 <div class="header-row">
-                    <div class="duplicates-container">
-                        <span class="duplicates-label">Duplicates</span>
-                        <div class="toggle" id="duplicates-toggle">
-                            <div class="toggle-slider"></div>
-                        </div>
-                    </div>
+                    <button class="faq-button" id="faq-button">FAQ</button>
                     <div class="puzzle-info">
                         <div id="puzzle-number">Puzzle #1</div>
                         <div id="date-info"></div>
                     </div>
+                </div>
                 </div>
             </div>
 
@@ -568,7 +735,43 @@
             </div>
 
             <button class="btn btn-primary" id="back-to-code-btn" style="margin-top: 15px;">Back to Game</button>
-            
+          
+            <!-- FAQ Modal -->
+        <div class="modal-overlay" id="faq-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">FAQ</h2>
+                    <button class="close-button" id="close-faq">×</button>
+                </div>
+                
+                <div class="faq-content">
+                    <h3>How do I play?</h3>
+                    <p>Pick 4 numbers from 1-6 to guess the secret code. Use the colored feedback to narrow down your next guess. You have 10 tries to crack it!</p>
+                    
+                    <h3>What do the colored indicators mean?</h3>
+                    <p>
+                        <span class="indicator-example indicator-green"></span> <strong>Green</strong> = Correct number in the correct position<br>
+                        <span class="indicator-example indicator-yellow"></span> <strong>Yellow</strong> = Correct number in the wrong position<br>
+                        <span class="indicator-example indicator-gray"></span> <strong>Gray</strong> = Number not in the code
+                    </p>
+                    <p><strong>Important:</strong> The indicators don't tell you WHICH positions are correct - they only tell you HOW MANY are right!</p>
+                    
+                    <h3>Can the same number appear twice?</h3>
+                    <p>No. Each number appears only once in the code.</p>
+                    
+                    <h3>How often does the puzzle change?</h3>
+                    <p>Daily at midnight. Everyone gets the same puzzle each day.</p>
+                    
+                    <h3>What do the stats mean?</h3>
+                    <ul>
+                        <li><strong>Current/Max Streak:</strong> Days solved in a row (current/best ever)</li>
+                        <li><strong>Average Guesses:</strong> How many tries you typically need</li>
+                        <li><strong>Games Played:</strong> Total puzzles attempted</li>
+                        <li><strong>Win Rate:</strong> Percentage successfully solved</li>
+                    </ul>
+                </div>
+            </div>
+        </div> 
         </div>
     </div>
 
@@ -700,11 +903,26 @@
             }
 
             setupEventListeners() {
-                const duplicatesToggle = document.getElementById('duplicates-toggle');
-                duplicatesToggle.addEventListener('click', () => {
-                    this.duplicatesAllowed = !this.duplicatesAllowed;
-                    duplicatesToggle.classList.toggle('active', this.duplicatesAllowed);
-                    this.restartGame();
+            // FAQ Modal Event Listeners
+                document.getElementById('faq-button').addEventListener('click', () => {
+                    document.getElementById('faq-modal').classList.add('show');
+                });
+
+                document.getElementById('close-faq').addEventListener('click', () => {
+                    document.getElementById('faq-modal').classList.remove('show');
+                });
+
+                document.getElementById('faq-modal').addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) {
+                        document.getElementById('faq-modal').classList.remove('show');
+                    }
+                });
+
+                // Close FAQ on Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        document.getElementById('faq-modal').classList.remove('show');
+                    }
                 });
 
                 document.getElementById('clear-btn').addEventListener('click', () => {
@@ -1255,7 +1473,7 @@
                 // Return full version for actual sharing
                 return shareText;
             }
-            
+
             shareResults() {
                 const shareText = this.generateShareText();
                 const gameUrl = window.location.href.split('?')[0]; // Get current URL without params
