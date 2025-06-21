@@ -904,7 +904,12 @@
             setupEventListeners() {
             // FAQ Modal Event Listeners
                 document.getElementById('faq-button').addEventListener('click', () => {
-                    document.getElementById('faq-modal').classList.add('show');
+                    console.log('FAQ button clicked!');
+                    const modal = document.getElementById('faq-modal');
+                    console.log('Modal element:', modal);
+                    console.log('Classes before:', modal.className);
+                    modal.classList.add('show');
+                    console.log('Classes after:', modal.className);
                 });
 
                 document.getElementById('close-faq').addEventListener('click', () => {
