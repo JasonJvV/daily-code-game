@@ -736,43 +736,44 @@
             <button class="btn btn-primary" id="back-to-code-btn" style="margin-top: 15px;">Back to Game</button>
           
             <!-- FAQ Modal -->
-        <div class="modal-overlay" id="faq-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">FAQ</h2>
-                    <button class="close-button" id="close-faq">×</button>
+            <div class="modal-overlay" id="faq-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">FAQ</h2>
+                        <button class="close-button" id="close-faq">×</button>
+                    </div>
+                    
+                    <div class="faq-content">
+                        <h3>How do I play?</h3>
+                        <p>Pick 4 numbers from 1-6 to guess the secret code. Use the colored feedback to narrow down your next guess. You have 10 tries to crack it!</p>
+                        
+                        <h3>What do the colored indicators mean?</h3>
+                        <p>
+                            <span class="indicator-example indicator-green"></span> <strong>Green</strong> = Correct number in the correct position<br>
+                            <span class="indicator-example indicator-yellow"></span> <strong>Yellow</strong> = Correct number in the wrong position<br>
+                            <span class="indicator-example indicator-gray"></span> <strong>Gray</strong> = Number not in the code
+                        </p>
+                        <p><strong>Important:</strong> The indicators don't tell you WHICH positions are correct - they only tell you HOW MANY are right!</p>
+                        
+                        <h3>Can the same number appear twice?</h3>
+                        <p>No. Each number appears only once in the code.</p>
+                        
+                        <h3>How often does the puzzle change?</h3>
+                        <p>Daily at midnight. Everyone gets the same puzzle each day.</p>
+                        
+                        <h3>What do the stats mean?</h3>
+                        <ul>
+                            <li><strong>Current/Max Streak:</strong> Days solved in a row (current/best ever)</li>
+                            <li><strong>Average Guesses:</strong> How many tries you typically need</li>
+                            <li><strong>Games Played:</strong> Total puzzles attempted</li>
+                            <li><strong>Win Rate:</strong> Percentage successfully solved</li>
+                        </ul>
+                    </div>
                 </div>
-                
-                <div class="faq-content">
-                    <h3>How do I play?</h3>
-                    <p>Pick 4 numbers from 1-6 to guess the secret code. Use the colored feedback to narrow down your next guess. You have 10 tries to crack it!</p>
-                    
-                    <h3>What do the colored indicators mean?</h3>
-                    <p>
-                        <span class="indicator-example indicator-green"></span> <strong>Green</strong> = Correct number in the correct position<br>
-                        <span class="indicator-example indicator-yellow"></span> <strong>Yellow</strong> = Correct number in the wrong position<br>
-                        <span class="indicator-example indicator-gray"></span> <strong>Gray</strong> = Number not in the code
-                    </p>
-                    <p><strong>Important:</strong> The indicators don't tell you WHICH positions are correct - they only tell you HOW MANY are right!</p>
-                    
-                    <h3>Can the same number appear twice?</h3>
-                    <p>No. Each number appears only once in the code.</p>
-                    
-                    <h3>How often does the puzzle change?</h3>
-                    <p>Daily at midnight. Everyone gets the same puzzle each day.</p>
-                    
-                    <h3>What do the stats mean?</h3>
-                    <ul>
-                        <li><strong>Current/Max Streak:</strong> Days solved in a row (current/best ever)</li>
-                        <li><strong>Average Guesses:</strong> How many tries you typically need</li>
-                        <li><strong>Games Played:</strong> Total puzzles attempted</li>
-                        <li><strong>Win Rate:</strong> Percentage successfully solved</li>
-                    </ul>
-                </div>
-            </div>
-        </div> 
+            </div> 
+        </div>
     </div>
-
+    
     <script>
         // IMPORTANT: Replace this with your Railway backend URL
         const API_URL = 'https://daily-code-game-production.up.railway.app/api';
