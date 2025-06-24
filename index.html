@@ -1269,6 +1269,7 @@
                     feedbackHistory: this.feedbackHistory,
                     secretCode: this.secretCode.map(n => n.value),
                     time: Math.floor((this.endTime - this.startTime) / 1000)
+                    playerRank: this.playerRank  // ADD THIS LINE
                 };
                 
                 localStorage.setItem('dailyCodeLastPlay', today);
@@ -1283,6 +1284,7 @@
                     this.guesses = { length: gameData.guesses };
                     this.feedbackHistory = gameData.feedbackHistory;
                     this.secretCode = gameData.secretCode.map(n => ({ name: n.toString(), value: n }));
+                    this.playerRank = gameData.playerRank;  // ADD THIS LINE
                 }
             }
 
