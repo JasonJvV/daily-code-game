@@ -1616,6 +1616,26 @@
                 
                 // Hide the game stats cards at bottom since we're in review mode
                 document.getElementById('stats').style.display = 'none';
+                
+                // IMPORTANT: Render the guess board if it's empty
+                if (document.querySelectorAll('.guess-slot').length === 0) {
+                    this.renderGuessBoard();
+                    
+                    // Then display the saved game
+                    const savedGame = localStorage.getItem('dailyCodeLastGame');
+                    if (savedGame) {
+                        const gameData = JSON.parse(savedGame);
+                        
+                        // Display each guess
+                        for (let i = 0; i < gameData.attempts.length; i++) {
+                            const guess = gameData.attempts[i].map(num => ({
+                                name: num.toString(),
+                                value: num
+                            }));
+                            this.displayGuess(i, guess, gameData.feedbackHistory[i]);
+                        }
+                    }
+                }
             }
 
             getStoredStats() {
