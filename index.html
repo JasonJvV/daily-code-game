@@ -1250,11 +1250,11 @@
                     clearInterval(this.timerInterval);
                 }
                 
-                // Save game data locally
-                this.saveLocalGameData();
-                
                 // Submit results to backend
                 await this.submitResults();
+
+                // Save game data locally
+                this.saveLocalGameData();
                 
                 // Show stats page after a short delay
                 setTimeout(() => {
