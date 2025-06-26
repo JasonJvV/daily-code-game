@@ -1401,12 +1401,16 @@
                         if (this.playerRank) {
                             document.getElementById('player-rank').textContent = this.getOrdinalSuffix(this.playerRank);
                             
-                            const gameTime = Math.floor((this.endTime - this.startTime) / 1000);
-                            const minutes = Math.floor(gameTime / 60);
-                            const seconds = gameTime % 60;
-                            const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                            const asterisk = this.hintsUsed > 0 ? '*' : '';
-                            document.getElementById('player-rank-time').textContent = timeString + asterisk;
+                            // Get time from saved game data
+                            const savedGame = localStorage.getItem('dailyCodeLastGame');
+                            if (savedGame) {
+                                const gameData = JSON.parse(savedGame);
+                                const minutes = Math.floor(gameData.time / 60);
+                                const seconds = gameData.time % 60;
+                                const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                                const asterisk = this.hintsUsed > 0 ? '*' : '';
+                                document.getElementById('player-rank-time').textContent = timeString + asterisk;
+                            }
                         }
                     }
                 } catch (error) {
