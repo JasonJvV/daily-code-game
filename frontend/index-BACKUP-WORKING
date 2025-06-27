@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Code Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: #000000;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(255,255,255,0.1);
+            padding: 30px;
+            max-width: 480px;
+            width: 100%;
+            border: 2px solid #333;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+       .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .faq-button {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-width: 60px;
+        }
+
+        .faq-button:hover {
+            background: #444;
+            border-color: #666;
+        }
+
+        .faq-button:active {
+            transform: scale(0.95);
+        }
+
+        .puzzle-info {
+            color: #ccc;
+            font-size: 0.95em;
+            text-align: center;
+        }
+
+        .faq-button {
+            position: absolute;
+            left: 0;
+        }
+
+        .title {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .timer-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+
+        .color-palette {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .color-btn {
+            width: 45px;
+            height: 45px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: #333;
+            transition: all 0.3s;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .color-btn.eliminated {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .color-btn.eliminated:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #545b62;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .guess-board {
+            margin-bottom: 25px;
+        }
+
+        .guess-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            margin-left: 15px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .feedback-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            background: #444;
+        }
+
+        .feedback-dot.correct {
+            background: #28a745;
+        }
+
+        .feedback-dot.wrong-position {
+            background: #ffc107;
+        }
+
+        .guess-slot {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #444;
+            border-radius: 50%;
+            background: #222;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .guess-slot.filled {
+            border-color: #fff;
+            background: #333;
+        }
+
+        .guess-slot.active {
+            border-color: #007bff;
+            border-style: dashed;
+        }
+
+        .guess-slot.selected {
+            border-color: #dc3545;
+            border-style: solid;
+            border-width: 3px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .hint-section {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .hint-section .btn {
+            background: #ffc107;
+            color: black;
+        }
+
+        .stat-card {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #ccc;
+            margin-top: 5px;
+        }
+
+        /* Stats Page Styles */
+        .stats-container {
+            text-align: center;
+            color: white;
+        }
+
+        .completion-message {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .completion-message.won {
+            color: #28a745;
+        }
+
+        .completion-message.lost {
+            color: #dc3545;
+        }
+
+        .solution-display {
+            margin-bottom: 30px;
+        }
+
+        .solution-label {
+            color: #ccc;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .solution-code {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .solution-slot {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .yesterday-solution {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+
+        .yesterday-label {
+            color: #ccc;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .yesterday-code {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .yesterday-slot {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #666;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #ccc;
+        }
+
+        .fastest-time {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffc107;
+        }
+
+        .fastest-time .stat-value {
+            color: #ffc107;
+        }
+
+        .share-section {
+            background: #222;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            margin-bottom: 20px;
+        }
+
+        .share-title {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        .emoji-grid {
+            font-family: monospace;
+            font-size: 1.2em;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #111;
+            border-radius: 4px;
+            white-space: pre;
+        }
+
+        .play-again-btn {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+/* FAQ Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #007bff;
+            margin: 0;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 2em;
+            cursor: pointer;
+            padding: 0;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            margin: -10px -10px -10px 0;
+        }
+
+        .close-button:hover {
+            background: #333;
+            color: white;
+        }
+
+        .faq-content h3 {
+            color: #007bff;
+            font-size: 1.1em;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .faq-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .faq-content p {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .faq-content ul {
+            margin: 10px 0;
+            padding-left: 25px;
+            color: #ccc;
+        }
+
+        .faq-content li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .faq-content strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        .indicator-example {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin: 0 4px 0 0;
+            vertical-align: middle;
+        }
+
+        .indicator-green {
+            background: #28a745;
+        }
+
+        .indicator-yellow {
+            background: #ffc107;
+        }
+
+        .indicator-gray {
+            background: #444;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal Scrollbar */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #222;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+        
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 20px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-button {
+                padding: 8px 15px;
+                font-size: 0.85em;
+            }
+
+            .modal-content {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .modal-header {
+                margin-bottom: 20px;
+            }
+
+            .modal-title {
+                font-size: 1.5em;
+            }
+
+            .faq-content h3 {
+                font-size: 1em;
+                margin-top: 20px;
+            }
+
+            .faq-content p, .faq-content li {
+                font-size: 0.95em;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Game View -->
+        <div id="game-view">
+            <div class="header">
+                <h1 class="title">Daily Code</h1>
+                <div class="header-row">
+                    <button class="faq-button" id="faq-button">FAQ</button>
+                    <div class="puzzle-info">
+                        <div id="puzzle-number">Puzzle #1</div>
+                        <div id="date-info"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-info">
+                <span>Guess: <span id="guess-count">1</span>/10</span>
+                <span>Time: <span id="timer">00:00</span></span>
+            </div>
+
+            <div class="hint-section" id="hint-section" style="display: none;">
+                <button class="btn btn-secondary" id="hint-btn">Use Hint (Eliminate 1 Number)</button>
+            </div>
+
+            <div class="color-palette" id="color-palette"></div>
+
+            <div class="controls">
+                <button class="btn btn-secondary" id="clear-btn">Clear</button>
+                <button class="btn btn-primary" id="submit-btn" disabled>Submit Guess</button>
+            </div>
+
+            <div class="guess-board" id="guess-board"></div>
+
+            <button class="btn btn-primary" id="view-stats-btn" style="width: 100%; margin-bottom: 20px; display: none;">View Stats</button>
+
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="current-streak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="max-streak">0</div>
+                    <div class="stat-label">Max Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avg-guesses">-</div>
+                    <div class="stat-label">Avg Guesses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="games-played">0</div>
+                    <div class="stat-label">Games Played</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats View -->
+        <div id="stats-view" class="stats-container hidden">
+            <div class="completion-message" id="completion-message"></div>
+            
+            <div class="solution-display">
+                <div class="solution-label">Today's Code:</div>
+                <div class="solution-code" id="solution-code"></div>
+            </div>
+
+            <div class="yesterday-solution">
+                <div class="yesterday-label">Yesterday's Solution:</div>
+                <div class="yesterday-code" id="yesterday-code">
+                    <span class="loading">Loading...</span>
+                </div>
+            </div>
+
+            <div class="fastest-time stat-card">
+                <div class="stat-value" id="fastest-time-today">--:--</div>
+                <div class="stat-label">Fastest Time Today</div>
+            </div>
+            
+            <div class="stat-card" style="background: #2d2d2d; border: 1px solid #007bff; margin-bottom: 20px;">
+                <div class="stat-label" style="color: #007bff; margin-bottom: 10px;">Your World Ranking</div>
+                <div class="stat-value" id="player-rank" style="color: #007bff;">-</div>
+                <div class="stat-value" id="player-rank-time" style="color: #007bff; font-size: 1.2em;">--:--</div>
+            </div>
+
+            <div class="stats" id="final-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="players-today">0</div>
+                    <div class="stat-label">Players Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="final-current-streak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="final-max-streak">0</div>
+                    <div class="stat-label">Max Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="final-avg-guesses">-</div>
+                    <div class="stat-label">Avg Guesses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="final-games-played">0</div>
+                    <div class="stat-label">Games Played</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="win-rate">0%</div>
+                    <div class="stat-label">Win Rate</div>
+                </div>
+            </div>
+
+            <div class="share-section">
+                <div class="share-title">Share Your Result</div>
+                <div class="emoji-grid" id="emoji-grid"></div>
+                <button class="btn btn-success" id="share-btn">Share Results</button>
+            </div>
+
+            <button class="btn btn-primary" id="back-to-code-btn" style="margin-top: 15px;">Back to Game</button>
+        </div>
+        
+            <!-- FAQ Modal -->
+            <div class="modal-overlay" id="faq-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">FAQ</h2>
+                        <button class="close-button" id="close-faq">×</button>
+                    </div>
+                    
+                    <div class="faq-content">
+                        <h3>How do I play?</h3>
+                        <p>Pick 4 numbers from 1-6 to guess the secret code. Use the colored feedback to narrow down your next guess. You have 10 tries to crack it!</p>
+                        
+                        <h3>What do the colored indicators mean?</h3>
+                        <p>
+                            <span class="indicator-example indicator-green"></span> <strong>Green</strong> = Correct number in the correct position<br>
+                            <span class="indicator-example indicator-yellow"></span> <strong>Yellow</strong> = Correct number in the wrong position<br>
+                            <span class="indicator-example indicator-gray"></span> <strong>Gray</strong> = Number not in the code
+                        </p>
+                        <p><strong>Important:</strong> The indicators don't tell you WHICH positions are correct - they only tell you HOW MANY are right!</p>
+                        
+                        <h3>Can the same number appear twice?</h3>
+                        <p>No. Each number appears only once in the code.</p>
+                        
+                        <h3>How often does the puzzle change?</h3>
+                        <p>Daily at midnight. Everyone gets the same puzzle each day.</p>
+
+                        <h3>What does the astrix mean in my Rank?</h3>
+                        <p>The astrix indicates that you have used the Hint.</p>
+                        
+                        <h3>What do the stats mean?</h3>
+                        <ul>
+                            <li><strong>Current/Max Streak:</strong> Days solved in a row (current/best ever)</li>
+                            <li><strong>Average Guesses:</strong> How many tries you typically need</li>
+                            <li><strong>Games Played:</strong> Total puzzles attempted</li>
+                            <li><strong>Win Rate:</strong> Percentage successfully solved</li>
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    
+    <script>
+        // IMPORTANT: Replace this with your Railway backend URL
+        const API_URL = 'https://daily-code-game-production.up.railway.app/api';
+        
+        // Generate or get player ID
+        function getPlayerId() {
+            let playerId = localStorage.getItem('dailyCodePlayerId');
+            if (!playerId) {
+                playerId = 'player_' + Math.random().toString(36).substr(2, 9) + Date.now();
+                localStorage.setItem('dailyCodePlayerId', playerId);
+            }
+            return playerId;
+        }
+
+        class DailyCodeGame {
+            constructor() {
+                this.numbers = [
+                    { name: '1', value: 1 },
+                    { name: '2', value: 2 },
+                    { name: '3', value: 3 },
+                    { name: '4', value: 4 },
+                    { name: '5', value: 5 },
+                    { name: '6', value: 6 }
+                ];
+                
+                this.secretCode = [];
+                this.currentGuess = [null, null, null, null];
+                this.guesses = [];
+                this.attempts = [];
+                this.feedbackHistory = [];
+                this.gameOver = false;
+                this.gameWon = false;
+                this.startTime = Date.now();
+                this.duplicatesAllowed = false;
+                this.hintsUsed = 0;
+                this.eliminatedColors = new Set();
+                this.currentRow = 0;
+                this.selectedSlot = null;  // Track which slot user clicked
+                this.playerId = getPlayerId();
+                
+                this.initializeGame();
+                this.setupEventListeners();
+                this.updateDisplay();
+                this.startTimer();
+            }
+
+            async initializeGame() {
+                // Check if already played today
+                const today = new Date().toISOString().split('T')[0];
+                const lastPlayDate = localStorage.getItem('dailyCodeLastPlay');
+                
+                if (lastPlayDate === today) {
+                    this.gameOver = true;
+                    this.loadSavedGameData();
+                    this.showStatsPage();
+                    return;
+                }
+                
+                // Fetch today's puzzle info
+                try {
+                    const response = await fetch(`${API_URL}/puzzle/today?duplicates=${this.duplicatesAllowed}`);
+                    if (response.ok) {
+                        this.todayData = await response.json();
+                    }
+                } catch (error) {
+                    console.log('Continuing with offline mode');
+                }
+                
+                this.secretCode = this.generateDailyCode();
+                this.updatePuzzleInfo();
+                this.renderGuessBoard();
+                this.renderColorPalette();
+                this.loadStats();
+            }
+
+            generateDailyCode() {
+                const today = new Date();
+                const dateString = today.toISOString().split('T')[0];
+                const seed = this.hashCode(dateString);
+                
+                const rng = this.seededRandom(seed);
+                const code = [];
+                
+                for (let i = 0; i < 4; i++) {
+                    const availableNumbers = this.duplicatesAllowed ? 
+                        this.numbers : 
+                        this.numbers.filter(n => !code.some(existing => existing.name === n.name));
+                    
+                    const randomIndex = Math.floor(rng() * availableNumbers.length);
+                    code.push(availableNumbers[randomIndex]);
+                }
+                
+                return code;
+            }
+
+            hashCode(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return Math.abs(hash);
+            }
+
+            seededRandom(seed) {
+                let state = seed;
+                return function() {
+                    state = (state * 1664525 + 1013904223) % 4294967296;
+                    return state / 4294967296;
+                };
+            }
+
+            updatePuzzleInfo() {
+                const today = new Date();
+                const startDate = new Date('2025-06-14');
+                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                
+                document.getElementById('puzzle-number').textContent = `Puzzle #${daysDiff + 1}`;
+                document.getElementById('date-info').textContent = today.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+
+            setupEventListeners() {
+            // FAQ Modal Event Listeners
+                document.getElementById('faq-button').addEventListener('click', () => {
+                    document.getElementById('faq-modal').classList.add('show');
+                });
+
+                document.getElementById('close-faq').addEventListener('click', () => {
+                    document.getElementById('faq-modal').classList.remove('show');
+                });
+
+                document.getElementById('faq-modal').addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) {
+                        document.getElementById('faq-modal').classList.remove('show');
+                    }
+                });
+
+                // Close FAQ on Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        document.getElementById('faq-modal').classList.remove('show');
+                    }
+                });
+
+                document.getElementById('clear-btn').addEventListener('click', () => {
+                    this.clearCurrentGuess();
+                });
+
+                document.getElementById('submit-btn').addEventListener('click', () => {
+                    this.submitGuess();
+                });
+
+                document.getElementById('hint-btn').addEventListener('click', () => {
+                    this.useHint();
+                });
+
+               const shareBtn = document.getElementById('share-btn');
+                if (shareBtn) {
+                    shareBtn.addEventListener('click', () => {
+                        this.shareResults();
+                    });
+                }
+
+                document.getElementById('back-to-code-btn').addEventListener('click', () => {
+                    this.showGameBoard();
+                });
+
+                document.getElementById('view-stats-btn').addEventListener('click', () => {
+                    this.showStatsPage();
+                });
+
+            }
+
+            renderGuessBoard() {
+                const board = document.getElementById('guess-board');
+                board.innerHTML = '';
+
+                for (let row = 0; row < 10; row++) {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'guess-row';
+                    
+                    const guessContainer = document.createElement('div');
+                    guessContainer.style.display = 'flex';
+                    guessContainer.style.gap = '8px';
+                    
+                    for (let col = 0; col < 4; col++) {
+                        const slot = document.createElement('div');
+                        slot.className = 'guess-slot';
+                        slot.id = `guess-${row}-${col}`;
+                        slot.addEventListener('click', () => this.onSlotClick(row, col));
+                        guessContainer.appendChild(slot);
+                    }
+                    
+                    const feedbackContainer = document.createElement('div');
+                    feedbackContainer.className = 'feedback-container';
+                    feedbackContainer.id = `feedback-${row}`;
+                    feedbackContainer.style.visibility = 'hidden';
+                    
+                    for (let i = 0; i < 4; i++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'feedback-dot';
+                        feedbackContainer.appendChild(dot);
+                    }
+                    
+                    rowDiv.appendChild(guessContainer);
+                    rowDiv.appendChild(feedbackContainer);
+                    board.appendChild(rowDiv);
+                }
+                
+                this.updateCurrentRowDisplay();
+            }
+
+            renderColorPalette() {
+                const palette = document.getElementById('color-palette');
+                palette.innerHTML = '';
+
+                this.numbers.forEach((number, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'color-btn';
+                    btn.textContent = number.value;
+                    
+                    btn.addEventListener('click', () => {
+                        this.selectNumber(number);
+                    });
+                    
+                    palette.appendChild(btn);
+                });
+
+                this.updateNumberPalette();
+            }
+
+            updateNumberPalette() {
+                const buttons = document.querySelectorAll('.color-btn');
+                buttons.forEach((btn, index) => {
+                    const number = this.numbers[index];
+                    btn.classList.toggle('eliminated', this.eliminatedColors.has(number.name));
+                });
+            }
+
+            selectNumber(number) {
+                if (this.gameOver || this.eliminatedColors.has(number.name)) {
+                    return;
+                }
+
+                // Use selected slot if one is selected, otherwise find first empty
+                let targetSlot;
+                if (this.selectedSlot !== null && this.currentGuess[this.selectedSlot] === null) {
+                    targetSlot = this.selectedSlot;
+                } else {
+                    targetSlot = this.currentGuess.findIndex(slot => slot === null);
+                }
+                
+                if (targetSlot !== -1) {
+                    this.currentGuess[targetSlot] = number;
+                    this.selectedSlot = null;  // Clear selection after placing
+                    this.updateCurrentRowDisplay();
+                    this.updateSubmitButton();
+                }
+            }
+
+            onSlotClick(row, col) {
+                if (this.gameOver || row !== this.currentRow) return;
+    
+                 if (this.currentGuess[col] !== null) {
+                // Clicking a filled slot clears it
+                    this.currentGuess[col] = null;
+                    this.selectedSlot = null;
+                    this.updateCurrentRowDisplay();
+                    this.updateSubmitButton();
+                } else {
+                    // Clicking an empty slot selects it
+                    this.selectedSlot = col;
+                    this.updateCurrentRowDisplay();
+                }
+            }
+
+            updateCurrentRowDisplay() {
+                // Clear all active and selected states
+                for (let row = 0; row < 10; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        const slot = document.getElementById(`guess-${row}-${col}`);
+                        if (slot) {
+                            slot.classList.remove('active');
+                            slot.classList.remove('selected');
+                        }
+                    }
+                }
+                
+                // Only highlight current row (or show completed game if game is over)
+                    if (this.currentRow < 10) {
+                    // First, determine which slot will receive the next number
+                    let nextSlot;
+                    if (this.selectedSlot !== null && this.currentGuess[this.selectedSlot] === null) {
+                        nextSlot = this.selectedSlot;
+                    } else {
+                        nextSlot = this.currentGuess.findIndex(slot => slot === null);
+                    }
+                    
+                    for (let col = 0; col < 4; col++) {
+                        const slot = document.getElementById(`guess-${this.currentRow}-${col}`);
+                        if (slot) {
+                            const number = this.currentGuess[col];
+                            
+                            if (number) {
+                                slot.classList.add('filled');
+                                slot.classList.remove('active');
+                                slot.classList.remove('selected');
+                                slot.textContent = number.value;
+                            } else {
+                                slot.classList.remove('filled');
+                                slot.textContent = '';
+                                
+                                // Apply red border to next slot, blue dotted to others
+                                if (col === nextSlot) {
+                                    slot.classList.add('selected');
+                                    slot.classList.remove('active');
+                                } else {
+                                    slot.classList.add('active');
+                                    slot.classList.remove('selected');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            clearCurrentGuess() {
+                if (this.gameOver) return;
+                this.currentGuess = [null, null, null, null];
+                this.updateCurrentRowDisplay();
+                this.updateSubmitButton();
+            }
+
+            updateSubmitButton() {
+                const submitBtn = document.getElementById('submit-btn');
+                const isComplete = this.currentGuess.every(slot => slot !== null);
+                submitBtn.disabled = !isComplete || this.gameOver;
+            }
+
+            submitGuess() {
+                if (this.gameOver || this.currentGuess.some(slot => slot === null)) return;
+
+                const guess = [...this.currentGuess];
+                this.guesses.push(guess);
+                this.attempts.push(guess.map(g => g.value));
+
+                const feedback = this.getFeedback(guess);
+                this.feedbackHistory.push(feedback);
+                this.displayGuess(this.currentRow, guess, feedback);
+
+                if (feedback.every(f => f === 'correct')) {
+                    this.endGame(true);
+                } else if (this.guesses.length >= 10) {
+                    this.endGame(false);
+                } else {
+                    this.currentGuess = [null, null, null, null];
+                    this.currentRow++;
+                    this.updateCurrentRowDisplay();
+                    this.updateSubmitButton();
+                    this.updateGuessCount();
+                    this.checkHintAvailability();
+                }
+            }
+
+            checkHintAvailability() {
+                const hintSection = document.getElementById('hint-section');
+                const hintBtn = document.getElementById('hint-btn');
+                
+                if (this.guesses.length >= 5 && this.hintsUsed === 0) {
+                    hintSection.style.display = 'block';
+                } else {
+                    hintBtn.disabled = this.hintsUsed > 0;
+                }
+            }
+
+            useHint() {
+                if (this.hintsUsed > 0 || this.gameOver) return;
+
+                const incorrectNumbers = this.numbers.filter(number => 
+                    !this.secretCode.some(secret => secret.name === number.name) &&
+                    !this.eliminatedColors.has(number.name)
+                );
+
+                if (incorrectNumbers.length > 0) {
+                    const randomIncorrect = incorrectNumbers[Math.floor(Math.random() * incorrectNumbers.length)];
+                    this.eliminatedColors.add(randomIncorrect.name);
+                    this.hintsUsed++;
+                    this.updateNumberPalette();
+                    
+                    document.getElementById('hint-btn').disabled = true;
+                    document.getElementById('hint-btn').textContent = 'Hint Used';
+                }
+            }
+
+            getFeedback(guess) {
+                const feedback = [];
+                const secretCopy = [...this.secretCode];
+                const guessCopy = [...guess];
+
+                // First pass: mark correct positions
+                for (let i = 0; i < 4; i++) {
+                    if (guessCopy[i].name === secretCopy[i].name) {
+                        feedback[i] = 'correct';
+                        secretCopy[i] = null;
+                        guessCopy[i] = null;
+                    }
+                }
+
+                // Second pass: mark wrong positions
+                for (let i = 0; i < 4; i++) {
+                    if (guessCopy[i] !== null) {
+                        const secretIndex = secretCopy.findIndex(c => c && c.name === guessCopy[i].name);
+                        if (secretIndex !== -1) {
+                            feedback[i] = 'wrong-position';
+                            secretCopy[secretIndex] = null;
+                        } else {
+                            feedback[i] = 'incorrect';
+                        }
+                    }
+                }
+
+                return feedback;
+            }
+
+            displayGuess(rowIndex, guess, feedback) {
+                // Display numbers
+                for (let i = 0; i < 4; i++) {
+                    const slot = document.getElementById(`guess-${rowIndex}-${i}`);
+                    slot.classList.add('filled');
+                    slot.classList.remove('active');
+                    slot.textContent = guess[i].value;
+                }
+                
+                // Display feedback dots
+                const feedbackContainer = document.getElementById(`feedback-${rowIndex}`);
+                feedbackContainer.style.visibility = 'visible';
+                const dots = feedbackContainer.querySelectorAll('.feedback-dot');
+                
+                const sortedFeedback = [...feedback].sort((a, b) => {
+                    if (a === 'correct' && b !== 'correct') return -1;
+                    if (b === 'correct' && a !== 'correct') return 1;
+                    if (a === 'wrong-position' && b === 'incorrect') return -1;
+                    if (b === 'wrong-position' && a === 'incorrect') return 1;
+                    return 0;
+                });
+                
+                sortedFeedback.forEach((feedbackType, index) => {
+                    if (index < 4) {
+                        if (feedbackType === 'correct') {
+                            dots[index].classList.add('correct');
+                        } else if (feedbackType === 'wrong-position') {
+                            dots[index].classList.add('wrong-position');
+                        }
+                    }
+                });
+            }
+
+            async endGame(won) {
+                this.gameOver = true;
+                this.gameWon = won;
+                this.endTime = Date.now();
+                
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                }
+                
+                // Submit results to backend
+                await this.submitResults();
+
+                // Save game data locally
+                this.saveLocalGameData();
+                
+                // Show stats page after a short delay
+                setTimeout(() => {
+                    this.showStatsPage();
+                }, 1000);
+            }
+
+            saveLocalGameData() {
+                const today = new Date().toISOString().split('T')[0];
+                const gameData = {
+                    date: today,
+                    won: this.gameWon,
+                    guesses: this.guesses.length,
+                    attempts: this.attempts,
+                    feedbackHistory: this.feedbackHistory,
+                    secretCode: this.secretCode.map(n => n.value),
+                    time: Math.floor((this.endTime - this.startTime) / 1000),
+                    playerRank: this.playerRank  // ADD THIS LINE
+                };
+                
+                localStorage.setItem('dailyCodeLastPlay', today);
+                localStorage.setItem('dailyCodeLastGame', JSON.stringify(gameData));
+            }
+
+            loadSavedGameData() {
+                const savedGame = localStorage.getItem('dailyCodeLastGame');
+                if (savedGame) {
+                    const gameData = JSON.parse(savedGame);
+                    this.gameWon = gameData.won;
+                    this.guesses = { length: gameData.guesses };
+                    this.feedbackHistory = gameData.feedbackHistory;
+                    this.secretCode = gameData.secretCode.map(n => ({ name: n.toString(), value: n }));
+                    this.playerRank = gameData.playerRank;  // ADD THIS LINE
+                }
+            }
+
+            async submitResults() {
+                const today = new Date().toISOString().split('T')[0];
+                const gameTime = Math.floor((this.endTime - this.startTime) / 1000);
+                
+                try {
+                    const response = await fetch(`${API_URL}/game/submit`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            playerId: this.playerId,
+                            date: today,
+                            won: this.gameWon,
+                            guesses: this.guesses.length,
+                            time: gameTime,
+                            attempts: this.attempts
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.playerStats = data.stats;
+                        this.todayStats = data.todayStats;
+                        this.playerRank = data.rank;
+                    }
+                } catch (error) {
+                    console.log('Stats will be updated when connection is restored');
+                }
+            }
+
+            getOrdinalSuffix(rank) {
+                const j = rank % 10;
+                const k = rank % 100;
+                if (j === 1 && k !== 11) {
+                    return rank + "st";
+                }
+                if (j === 2 && k !== 12) {
+                    return rank + "nd";
+                }
+                if (j === 3 && k !== 13) {
+                    return rank + "rd";
+                }
+                return rank + "th";
+            }
+            async showStatsPage() {
+                document.getElementById('game-view').classList.add('hidden');
+                document.getElementById('stats-view').classList.remove('hidden');
+                
+                // Set completion message
+                const message = document.getElementById('completion-message');
+                if (this.gameWon) {
+                    message.textContent = `Congratulations! You solved it in ${this.guesses.length} guesses!`;
+                    message.className = 'completion-message won';
+                } else {
+                    message.textContent = 'Better luck tomorrow!';
+                    message.className = 'completion-message lost';
+                }
+                
+                // Display solution
+                const solutionContainer = document.getElementById('solution-code');
+                solutionContainer.innerHTML = '';
+                this.secretCode.forEach(num => {
+                    const slot = document.createElement('div');
+                    slot.className = 'solution-slot';
+                    slot.textContent = num.value;
+                    solutionContainer.appendChild(slot);
+                });
+                
+                // Load all stats
+                await this.loadAndDisplayStats();
+                await this.loadYesterdaySolution();
+                
+                // Generate share text
+                this.generateShareText();
+            }
+
+            async loadAndDisplayStats() {
+                try {
+                    // Fetch player stats
+                    const response = await fetch(`${API_URL}/player/${this.playerId}/stats`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const stats = data.stats;
+                        
+                        // Update stats display
+                        document.getElementById('final-current-streak').textContent = stats.currentStreak || 0;
+                        document.getElementById('final-max-streak').textContent = stats.maxStreak || 0;
+                        document.getElementById('final-games-played').textContent = stats.gamesPlayed || 0;
+                        document.getElementById('final-avg-guesses').textContent = stats.averageGuesses || '-';
+                        document.getElementById('win-rate').textContent = `${stats.winRate || 0}%`;
+                    }
+                    
+                    // Fetch today's puzzle stats
+                    const puzzleResponse = await fetch(`${API_URL}/puzzle/today`);
+                    if (puzzleResponse.ok) {
+                        const puzzleData = await puzzleResponse.json();
+                        
+                        document.getElementById('players-today').textContent = puzzleData.totalPlayers || 1;
+                        
+                        if (puzzleData.fastestTime) {
+                            const minutes = Math.floor(puzzleData.fastestTime / 60);
+                            const seconds = puzzleData.fastestTime % 60;
+                            document.getElementById('fastest-time-today').textContent = 
+                                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        }
+                        // Display player ranking
+                        if (this.playerRank) {
+                            document.getElementById('player-rank').textContent = this.getOrdinalSuffix(this.playerRank);
+                            
+                            // Get time from saved game data
+                            const savedGame = localStorage.getItem('dailyCodeLastGame');
+                            if (savedGame) {
+                                const gameData = JSON.parse(savedGame);
+                                const minutes = Math.floor(gameData.time / 60);
+                                const seconds = gameData.time % 60;
+                                const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                                const asterisk = this.hintsUsed > 0 ? '*' : '';
+                                document.getElementById('player-rank-time').textContent = timeString + asterisk;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log('Using offline stats');
+                    this.displayOfflineStats();
+                }
+            }
+
+            displayOfflineStats() {
+                // Load stats from localStorage
+                const stats = this.getStoredStats();
+                document.getElementById('final-current-streak').textContent = stats.currentStreak;
+                document.getElementById('final-max-streak').textContent = stats.maxStreak;
+                document.getElementById('final-games-played').textContent = stats.gamesPlayed;
+                document.getElementById('final-avg-guesses').textContent = stats.avgGuesses || '-';
+                document.getElementById('win-rate').textContent = `${stats.winRate || 0}%`;
+                document.getElementById('players-today').textContent = '1';
+                document.getElementById('fastest-time-today').textContent = '--:--';
+            }
+
+            async loadYesterdaySolution() {
+                try {
+                    const response = await fetch(`${API_URL}/puzzle/yesterday`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const container = document.getElementById('yesterday-code');
+                        container.innerHTML = '';
+                        
+                        data.solution.forEach(num => {
+                            const slot = document.createElement('div');
+                            slot.className = 'yesterday-slot';
+                            slot.textContent = num;
+                            container.appendChild(slot);
+                        });
+                    } else {
+                        document.getElementById('yesterday-code').innerHTML = '<span style="color: #666;">No puzzle yesterday</span>';
+                    }
+                } catch (error) {
+                    document.getElementById('yesterday-code').innerHTML = '<span style="color: #666;">Unable to load</span>';
+                }
+            }
+
+            generateShareText() {
+                const today = new Date();
+                const startDate = new Date('2025-06-14');
+                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                const puzzleNumber = daysDiff + 1;
+                
+                let shareText = `Daily Code #${puzzleNumber} ${this.gameWon ? this.guesses.length : 'X'}/10\n\n`;
+                
+                // Generate emoji grid
+                this.feedbackHistory.forEach(feedback => {
+                    feedback.forEach(result => {
+                        if (result === 'correct') {
+                            shareText += '🟩';
+                        } else if (result === 'wrong-position') {
+                            shareText += '🟨';
+                        } else {
+                            shareText += '⬜';
+                        }
+                    });
+                    shareText += '\n';
+                });
+                
+                // Display version for the UI (cleaner)
+                let displayText = shareText + '\n🎮 dailycodegame.com';
+                document.getElementById('emoji-grid').textContent = displayText;
+                
+                // Return full version for actual sharing
+                return shareText;
+            }
+
+            shareResults() {
+                const shareText = this.generateShareText();
+                const gameUrl = window.location.href.split('?')[0]; // Get current URL without params
+                
+                // Check if Web Share API is available (common on mobile)
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Daily Code Game',
+                        text: shareText,
+                        url: gameUrl
+                    }).catch(err => {
+                        // If user cancels or error occurs, fall back to copy
+                        if (err.name !== 'AbortError') {
+                            this.fallbackShare(shareText, gameUrl);
+                        }
+                    });
+                } else {
+                    // For desktop or browsers without share API
+                    this.fallbackShare(shareText, gameUrl);
+                }
+            }
+
+            fallbackShare(shareText, gameUrl) {
+                // For desktop or browsers without share API, copy to clipboard
+                const fullText = shareText + '\n\n🎮 Play Here: ' + gameUrl;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(fullText).then(() => {
+                        const shareBtn = document.getElementById('share-btn');
+                        const originalText = shareBtn.textContent;
+                        shareBtn.textContent = 'Copied! Share on your favorite platform';
+                        setTimeout(() => {
+                            shareBtn.textContent = originalText;
+                        }, 3000);
+                    });
+                } else {
+                    this.fallbackCopyToClipboard(fullText);
+                }
+            }
+
+            copyToClipboard() {
+                const shareText = document.getElementById('emoji-grid').textContent;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        const copyBtn = document.getElementById('copy-btn');
+                        const originalText = copyBtn.textContent;
+                        copyBtn.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                        }, 2000);
+                    }).catch(() => {
+                        this.fallbackCopyToClipboard(shareText);
+                    });
+                } else {
+                    this.fallbackCopyToClipboard(shareText);
+                }
+            }
+
+            fallbackCopyToClipboard(text) {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    const copyBtn = document.getElementById('copy-btn');
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy text:', err);
+                }
+                
+                document.body.removeChild(textArea);
+            }
+
+            updateGuessCount() {
+                document.getElementById('guess-count').textContent = this.guesses.length + 1;
+            }
+
+            startTimer() {
+                this.timerInterval = setInterval(() => {
+                    if (!this.gameOver) {
+                        const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                        const minutes = Math.floor(elapsed / 60);
+                        const seconds = elapsed % 60;
+                        document.getElementById('timer').textContent = 
+                            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            }
+
+            updateDisplay() {
+                this.renderColorPalette();
+                this.updateCurrentRowDisplay();
+            }
+
+            restartGame() {
+                // Check if already played today
+                const today = new Date().toISOString().split('T')[0];
+                const lastPlayDate = localStorage.getItem('dailyCodeLastPlay');
+                
+                if (lastPlayDate === today) {
+                    alert("You've already played today's puzzle! Come back tomorrow for a new one.");
+                    return;
+                }
+                
+                this.secretCode = this.generateDailyCode();
+                this.currentGuess = [null, null, null, null];
+                this.guesses = [];
+                this.gameOver = false;
+                this.gameWon = false;
+                this.startTime = Date.now();
+                this.hintsUsed = 0;
+                this.eliminatedColors.clear();
+                this.currentRow = 0;
+                
+                document.getElementById('guess-count').textContent = '1';
+                document.getElementById('hint-section').style.display = 'none';
+                
+                this.renderGuessBoard();
+                this.renderColorPalette();
+                this.updateSubmitButton();
+            }
+
+            showGameBoard() {
+                // Hide stats view and show game view
+                document.getElementById('stats-view').classList.add('hidden');
+                document.getElementById('game-view').classList.remove('hidden');
+                
+                // Show the View Stats button since game is over
+                document.getElementById('view-stats-btn').style.display = 'block';
+                
+                // Hide the game stats cards at bottom since we're in review mode
+                document.getElementById('stats').style.display = 'none';
+                
+                // IMPORTANT: Render the guess board if it's empty
+                if (document.querySelectorAll('.guess-slot').length === 0) {
+                    this.renderGuessBoard();
+                    
+                    // Then display the saved game
+                    const savedGame = localStorage.getItem('dailyCodeLastGame');
+                    if (savedGame) {
+                        const gameData = JSON.parse(savedGame);
+                        
+                        // Display each guess
+                        for (let i = 0; i < gameData.attempts.length; i++) {
+                            const guess = gameData.attempts[i].map(num => ({
+                                name: num.toString(),
+                                value: num
+                            }));
+                            this.displayGuess(i, guess, gameData.feedbackHistory[i]);
+                        }
+                    }
+                }
+            }
+
+            getStoredStats() {
+                const stored = localStorage.getItem('dailyCodeStats');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                return {
+                    gamesPlayed: 0,
+                    gamesWon: 0,
+                    currentStreak: 0,
+                    maxStreak: 0,
+                    totalGuesses: 0,
+                    avgGuesses: '-',
+                    winRate: 0
+                };
+            }
+
+            saveGameStats() {
+                const stats = this.getStoredStats();
+                stats.gamesPlayed++;
+                
+                if (this.gameWon) {
+                    stats.gamesWon++;
+                    stats.totalGuesses += this.guesses.length;
+                    stats.currentStreak++;
+                    stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
+                    stats.avgGuesses = (stats.totalGuesses / stats.gamesWon).toFixed(1);
+                } else {
+                    stats.currentStreak = 0;
+                }
+                
+                stats.winRate = Math.round((stats.gamesWon / stats.gamesPlayed) * 100);
+                
+                localStorage.setItem('dailyCodeStats', JSON.stringify(stats));
+            }
+
+            loadStats() {
+                const stats = this.getStoredStats();
+                document.getElementById('current-streak').textContent = stats.currentStreak;
+                document.getElementById('max-streak').textContent = stats.maxStreak;
+                document.getElementById('games-played').textContent = stats.gamesPlayed;
+                document.getElementById('avg-guesses').textContent = stats.avgGuesses;
+            }
+        }
+
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new DailyCodeGame();
+        });
+    </script>
+</body>
+</html>
