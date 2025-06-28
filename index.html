@@ -615,7 +615,169 @@
                 font-size: 0.95em;
             }
         }
-
+        /* ==========================================
+           EASTER EGG STYLES - SAFE TO ADD
+           ========================================== */
+        
+        /* Easter Egg Overlay */
+        .easter-egg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: eggFadeIn 0.5s ease-out;
+        }
+        
+        /* Easter Egg Notification Popup */
+        .easter-egg-notification {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            color: #000;
+            font-weight: bold;
+            animation: eggBounceIn 0.8s ease-out;
+            max-width: 320px;
+            box-shadow: 0 20px 40px rgba(255,215,0,0.4);
+            border: 3px solid #fff;
+        }
+        
+        /* Easter Egg Badge Icon */
+        .easter-egg-badge {
+            font-size: 4em;
+            margin-bottom: 15px;
+            animation: eggSpin 2s ease-in-out;
+        }
+        
+        /* Easter Egg Text Styles */
+        .easter-egg-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .easter-egg-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .easter-egg-description {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        
+        /* Easter Egg Stats Section */
+        .easter-egg-section {
+            background: linear-gradient(45deg, #2d2d2d, #1a1a1a);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+        }
+        
+        .easter-egg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        /* Individual Easter Egg Cards */
+        .easter-egg-card {
+            background: rgba(255,215,0,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,215,0,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .easter-egg-card:hover {
+            background: rgba(255,215,0,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .easter-egg-card-badge {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+        
+        .easter-egg-card-name {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .easter-egg-card-desc {
+            color: #ccc;
+            font-size: 0.8em;
+            line-height: 1.3;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .easter-egg-notification {
+                padding: 20px;
+                margin: 20px;
+                max-width: calc(100% - 40px);
+            }
+            
+            .easter-egg-badge {
+                font-size: 3em;
+            }
+            
+            .easter-egg-title {
+                font-size: 1.3em;
+            }
+            
+            .easter-egg-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* ==========================================
+           EASTER EGG ANIMATIONS
+           ========================================== */
+        
+        @keyframes eggFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes eggBounceIn {
+            0% { 
+                transform: scale(0.3) rotate(-10deg); 
+                opacity: 0; 
+            }
+            50% { 
+                transform: scale(1.05) rotate(5deg); 
+            }
+            100% { 
+                transform: scale(1) rotate(0deg); 
+                opacity: 1; 
+            }
+        }
+        
+        @keyframes eggSpin {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg) scale(1.1); }
+            50% { transform: rotate(10deg) scale(1.2); }
+            75% { transform: rotate(-5deg) scale(1.1); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        
+        /* END EASTER EGG STYLES */
+        
     </style>
 </head>
 <body>
