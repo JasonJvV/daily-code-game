@@ -1801,6 +1801,13 @@
                 this.guesses.push(guess);
                 this.attempts.push(guess.map(g => g.value));
 
+                // Check for easter eggs (SAFE - doesn't affect game logic)
+                try {
+                    this.easterEggManager.checkEasterEggs(guess.map(g => g.value));
+                } catch (error) {
+                    console.log('Easter egg check error:', error);
+                }
+
                 const feedback = this.getFeedback(guess);
                 this.feedbackHistory.push(feedback);
                 this.displayGuess(this.currentRow, guess, feedback);
