@@ -1489,6 +1489,10 @@
                 this.setupEventListeners();
                 this.updateDisplay();
                 this.startTimer();
+
+                // Initialize Easter Egg Manager (SAFE - doesn't change game logic)
+                this.easterEggManager = new EasterEggManager(this);
+
             }
 
             async initializeGame() {
