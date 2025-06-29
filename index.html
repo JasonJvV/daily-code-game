@@ -1394,6 +1394,8 @@
                     
                     this.easterEggs[eggId].unlocked = true;
                     this.saveUnlockedEggs();
+                    // Apply the theme for this easter egg
+                    this.applyTheme(eggId);
                     
                     const egg = this.easterEggs[eggId];
                     
