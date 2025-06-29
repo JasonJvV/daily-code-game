@@ -1882,7 +1882,10 @@
 
                 // Check for easter eggs (SAFE - doesn't affect game logic)
                 try {
-                    this.easterEggManager.checkEasterEggs(guess.map(g => g.value));
+                    const triggeredEggs = this.easterEggManager.checkEasterEggs(guess.map(g => g.value));
+                    if (triggeredEggs.length > 0) {
+                        console.log('Easter eggs triggered:', triggeredEggs);
+                    }
                 } catch (error) {
                     console.log('Easter egg check error:', error);
                 }
