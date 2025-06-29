@@ -1569,6 +1569,8 @@
 
                 // Initialize Easter Egg Manager (SAFE - doesn't change game logic)
                 this.easterEggManager = new EasterEggManager(this);
+                // Check and clear themes if it's a new day
+                this.checkAndClearDailyThemes();
 
             }
 
@@ -2319,6 +2321,30 @@
                 }
                 
                 document.body.removeChild(textArea);
+            }
+
+            checkAndClearDailyThemes() {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    const lastThemeDate = localStorage.getItem('dailyCodeLastThemeDate');
+                    
+                    if (lastThemeDate && lastThemeDate !== today) {
+                        // It's a new day, clear all themes
+                        const allThemes = document.body.className.match(/\w+-theme/g);
+                        if (allThemes) {
+                            allThemes.forEach(theme => {
+                                document.body.classList.remove(theme);
+                            });
+                        }
+                        // Clear the stored themes
+                        localStorage.removeItem('dailyCodeActiveThemes');
+                    }
+                    
+                    // Update the last theme date
+                    localStorage.setItem('dailyCodeLastThemeDate', today);
+                } catch (error) {
+                    console.log('Error checking daily themes:', error);
+                }
             }
 
             updateGuessCount() {
