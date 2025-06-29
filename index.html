@@ -1138,8 +1138,8 @@
                         if (egg) triggered.push(egg);
                     }
                     
-                    // 5. Lucky Seven (sum equals 7)
-                    if (guess.reduce((sum, n) => sum + n, 0) === 7) {
+                    // 5. Lucky Seven (sum equals 7, but not Fibonacci)
+                    if (guess.reduce((sum, n) => sum + n, 0) === 7 && !this.isFibonacci(guess)) {
                         const egg = this.triggerEasterEgg('lucky7');
                         if (egg) triggered.push(egg);
                     }
