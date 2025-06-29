@@ -1108,6 +1108,65 @@
                 }
             }
 
+            // Load active themes for today
+            loadActiveThemes() {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    const saved = localStorage.getItem('dailyCodeActiveThemes');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        if (data.date === today) {
+                            return data.themes || [];
+                        }
+                    }
+                    return [];
+                } catch (error) {
+                    console.log('Error loading active themes:', error);
+                    return [];
+                }
+            }
+
+            // Save active themes
+            saveActiveThemes() {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    const data = {
+                        date: today,
+                        themes: this.activeThemes
+                    };
+                    localStorage.setItem('dailyCodeActiveThemes', JSON.stringify(data));
+                } catch (error) {
+                    console.log('Error saving active themes:', error);
+                }
+            }
+
+            // Apply stored themes on game load
+            applyStoredThemes() {
+                try {
+                    this.activeThemes.forEach(themeId => {
+                        if (this.easterEggs[themeId] && this.easterEggs[themeId].themeClass) {
+                            document.body.classList.add(this.easterEggs[themeId].themeClass);
+                        }
+                    });
+                } catch (error) {
+                    console.log('Error applying stored themes:', error);
+                }
+            }
+
+            // Apply theme when easter egg is discovered
+            applyTheme(eggId) {
+                try {
+                    const egg = this.easterEggs[eggId];
+                    if (egg && egg.themeClass && !this.activeThemes.includes(eggId)) {
+                        document.body.classList.add(egg.themeClass);
+                        this.activeThemes.push(eggId);
+                        this.saveActiveThemes();
+                    }
+                } catch (error) {
+                    console.log('Error applying theme:', error);
+                }
+            }
+
             // Save recent guesses for pattern detection (SAFE - localStorage only)
             savePreviousGuesses() {
                 try {
