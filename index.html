@@ -1061,6 +1061,10 @@
                 
                 this.loadUnlockedEggs();
                 this.previousGuesses = this.loadPreviousGuesses();
+                
+                // Load and apply today's active themes
+                this.activeThemes = this.loadActiveThemes();
+                this.applyStoredThemes();
             }
 
             // Load unlocked easter eggs from localStorage (SAFE - read only)
