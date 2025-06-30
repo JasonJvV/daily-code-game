@@ -1424,6 +1424,12 @@
             // Show easter egg animation (SAFE - only adds/removes DOM elements)
             showEasterEggAnimation(egg) {
                 try {
+                    // Add haptic feedback for mobile devices
+                    if (navigator.vibrate) {
+                        // Vibrate pattern: vibrate 200ms, pause 100ms, vibrate 200ms
+                        navigator.vibrate([200, 100, 200]);
+                    }
+                    
                     // Create overlay
                     const overlay = document.createElement('div');
                     overlay.className = 'easter-egg-overlay';
