@@ -1145,7 +1145,10 @@
                 try {
                     this.activeThemes.forEach(themeId => {
                         if (this.easterEggs[themeId] && this.easterEggs[themeId].themeClass) {
-                            document.body.classList.add(this.easterEggs[themeId].themeClass);
+                            const gameContainer = document.querySelector('.game-container');
+                        if (gameContainer) {
+                            gameContainer.classList.add(this.easterEggs[themeId].themeClass);
+                        }
                         }
                     });
                 } catch (error) {
@@ -1158,7 +1161,14 @@
                 try {
                     const egg = this.easterEggs[eggId];
                     if (egg && egg.themeClass && !this.activeThemes.includes(eggId)) {
-                        document.body.classList.add(egg.themeClass);
+                        const gameContainer = document.querySelector('.game-container');
+                        console.log('Applying theme:', egg.themeClass, 'to container:', gameContainer);
+                        if (gameContainer) {
+                            gameContainer.classList.add(egg.themeClass);
+                            console.log('Container classes after:', gameContainer.className);
+                        } else {
+                            console.log('Game container not found!');
+                        }
                         this.activeThemes.push(eggId);
                         this.saveActiveThemes();
                     }
@@ -2333,7 +2343,8 @@
                     
                     if (lastThemeDate && lastThemeDate !== today) {
                         // It's a new day, clear all themes
-                        const allThemes = document.body.className.match(/\w+-theme/g);
+                        const gameContainer = document.querySelector('.game-container');
+                        const allThemes = gameContainer ? gameContainer.className.match(/\w+-theme/g) : null;
                         if (allThemes) {
                             allThemes.forEach(theme => {
                                 document.body.classList.remove(theme);
