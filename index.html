@@ -2366,11 +2366,14 @@
                         const allThemes = gameContainer ? gameContainer.className.match(/\w+-theme/g) : null;
                         if (allThemes) {
                             allThemes.forEach(theme => {
+                                gameContainer.classList.remove(theme);
                                 document.body.classList.remove(theme);
                             });
                         }
-                        // Clear the stored themes
+                        // Clear ALL theme-related storage
                         localStorage.removeItem('dailyCodeActiveThemes');
+                        localStorage.removeItem('dailyCodeEasterEggs');
+                        localStorage.removeItem('dailyCodeLastThemeDate');
                     }
                     
                     // Update the last theme date
