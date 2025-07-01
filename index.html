@@ -1398,14 +1398,18 @@
             // Trigger easter egg with animation (SAFE - only adds visual elements)
             triggerEasterEgg(eggId) {
                 try {
-                    if (!this.easterEggs[eggId] || this.easterEggs[eggId].unlocked) {
-                        return null; // Already unlocked
-                    }
-                    
+                    if (!this.easterEggs[eggId]) {
+                    return null; // Invalid egg
+                }
+                
+                // Always mark as unlocked for tracking purposes
+                if (!this.easterEggs[eggId].unlocked) {
                     this.easterEggs[eggId].unlocked = true;
                     this.saveUnlockedEggs();
-                    // Apply the theme for this easter egg
-                    this.applyTheme(eggId);
+                }
+                
+                // Always apply the theme
+                this.applyTheme(eggId);
                     
                     const egg = this.easterEggs[eggId];
                     
