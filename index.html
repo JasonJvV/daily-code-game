@@ -827,6 +827,490 @@
         .fibonacci-theme .stat-value {
             color: #FFD700;
         }
+
+        /* 2. BINARY THEME - Matrix Style */
+        .binary-theme {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .binary-theme::before {
+            content: '01001000101110010110110001100001';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            height: 100%;
+            font-family: 'Courier New', monospace;
+            color: rgba(0, 255, 0, 0.1);
+            font-size: 20px;
+            line-height: 1.5;
+            animation: matrixRain 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+            word-break: break-all;
+            overflow: hidden;
+        }
+
+        @keyframes matrixRain {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(100%); }
+        }
+
+        .binary-theme * {
+            font-family: 'Courier New', monospace !important;
+        }
+
+        .binary-theme .btn,
+        .binary-theme .guess-slot,
+        .binary-theme .color-btn {
+            border-color: #00ff00 !important;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+
+        .binary-theme .feedback-dot {
+            border-radius: 0 !important;
+        }
+
+        /* 3. MIDNIGHT THEME - Night Owl */
+        .midnight-theme {
+            background: linear-gradient(180deg, #0a0a2e 0%, #1a1a3e 50%, #2a2a4e 100%) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .midnight-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 20%, white, transparent);
+            background-size: 200px 200px;
+            animation: twinkle 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .midnight-theme .btn,
+        .midnight-theme .guess-slot,
+        .midnight-theme .stat-card {
+            box-shadow: 0 0 15px rgba(147, 147, 255, 0.3);
+        }
+
+        /* 4. STORM THEME - Perfect Storm */
+        .storm-theme {
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 50%, #1a252f 100%) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .storm-theme::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.03) 50%,
+                transparent 100%
+            );
+            animation: rain 1s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rain {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(100%); }
+        }
+
+        .storm-theme::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0);
+            animation: lightning 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes lightning {
+            0%, 90%, 100% { background: rgba(255, 255, 255, 0); }
+            95% { background: rgba(255, 255, 255, 0.2); }
+        }
+
+        .storm-theme .btn,
+        .storm-theme .guess-slot {
+            border-color: #3498db !important;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        /* 5. TIME THEME - Time Traveler */
+        .time-theme {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-theme::before {
+            content: '⚙';
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            font-size: 100px;
+            opacity: 0.1;
+            animation: clockSpin 30s linear infinite;
+            pointer-events: none;
+        }
+
+        .time-theme::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(
+                circle,
+                transparent 30%,
+                rgba(138, 43, 226, 0.1) 40%,
+                transparent 50%
+            );
+            animation: timeVortex 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes clockSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes timeVortex {
+            from { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            to { transform: translate(-50%, -50%) rotate(360deg) scale(1.5); }
+        }
+
+        .time-theme .guess-slot {
+            animation: temporalShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes temporalShimmer {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* 6. BIRTHDAY THEME - Developer Tribute */
+        .birthday-theme {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .birthday-theme::before,
+        .birthday-theme::after {
+            content: '🎊';
+            position: absolute;
+            font-size: 30px;
+            animation: confettiFall 10s linear infinite;
+            pointer-events: none;
+        }
+
+        .birthday-theme::before {
+            top: -50px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .birthday-theme::after {
+            top: -50px;
+            right: 10%;
+            animation-delay: 5s;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(calc(100vh + 50px)) rotate(360deg);
+            }
+        }
+
+        .birthday-theme .btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4) !important;
+            background-size: 300% 300%;
+            animation: partyGradient 3s ease infinite;
+        }
+
+        @keyframes partyGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .birthday-theme .puzzle-info::after {
+            content: ' 🎂';
+        }
+
+        /* 7. SYMMETRY THEME - Mirror Master */
+        .symmetry-theme {
+            position: relative;
+        }
+
+        .symmetry-theme::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: inherit;
+            transform: scaleY(-1);
+            opacity: 0.3;
+            pointer-events: none;
+            filter: blur(2px);
+        }
+
+        .symmetry-theme .btn,
+        .symmetry-theme .guess-slot,
+        .symmetry-theme .stat-card {
+            background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                rgba(255, 255, 255, 0.1) 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* 8. DICE THEME - High Roller */
+        .dice-theme {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dice-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, transparent 3%, #444 3.5%, transparent 4%),
+                radial-gradient(circle at 40% 50%, transparent 3%, #444 3.5%, transparent 4%),
+                radial-gradient(circle at 60% 50%, transparent 3%, #444 3.5%, transparent 4%);
+            background-size: 50px 50px;
+            background-position: 0 0, 10px 10px, 20px 20px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .dice-theme .btn,
+        .dice-theme .guess-slot {
+            border-color: #ff0000 !important;
+            box-shadow: 
+                0 0 20px rgba(255, 0, 0, 0.5),
+                inset 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .dice-theme .title,
+        .dice-theme .stat-value {
+            text-shadow: 
+                0 0 10px #ff0000,
+                0 0 20px #ff0000,
+                0 0 30px #ff0000;
+            animation: neonFlicker 2s ease-in-out infinite;
+        }
+
+        @keyframes neonFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* 9. MINIMALIST THEME - Zen Master */
+        .minimalist-theme {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%) !important;
+            border: none !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .minimalist-theme .btn,
+        .minimalist-theme .guess-slot,
+        .minimalist-theme .color-btn {
+            border-width: 1px !important;
+            border-color: rgba(0, 0, 0, 0.1) !important;
+            box-shadow: none !important;
+        }
+
+        .minimalist-theme .stat-card {
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+        }
+
+        .minimalist-theme * {
+            animation: zenBreathe 4s ease-in-out infinite;
+        }
+
+        @keyframes zenBreathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* 10. SEQUENTIAL THEME - Perfectionist */
+        .sequential-theme {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sequential-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.05) 25%,
+                rgba(255, 255, 255, 0.05) 50%,
+                transparent 75%
+            );
+            background-size: 100px 100%;
+            animation: staircase 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes staircase {
+            from { background-position-x: 0; }
+            to { background-position-x: 100px; }
+        }
+
+        .sequential-theme .color-btn:nth-child(1) { transform: translateY(0px); }
+        .sequential-theme .color-btn:nth-child(2) { transform: translateY(-2px); }
+        .sequential-theme .color-btn:nth-child(3) { transform: translateY(-4px); }
+        .sequential-theme .color-btn:nth-child(4) { transform: translateY(-6px); }
+        .sequential-theme .color-btn:nth-child(5) { transform: translateY(-8px); }
+        .sequential-theme .color-btn:nth-child(6) { transform: translateY(-10px); }
+
+        /* 11. CHAOS THEME - Chaos Walker */
+        .chaos-theme * {
+            animation: chaosGlitch 10s ease-in-out infinite;
+        }
+
+        @keyframes chaosGlitch {
+            0%, 100% { 
+                transform: translate(0); 
+                filter: hue-rotate(0deg);
+            }
+            25% { 
+                transform: translate(-1px, 1px); 
+                filter: hue-rotate(10deg);
+            }
+            50% { 
+                transform: translate(1px, -1px); 
+                filter: hue-rotate(-10deg);
+            }
+            75% { 
+                transform: translate(-1px, -1px); 
+                filter: hue-rotate(5deg);
+            }
+        }
+
+        .chaos-theme {
+            background: linear-gradient(
+                45deg,
+                #1a1a1a 25%,
+                #2a2a2a 25%,
+                #2a2a2a 50%,
+                #1a1a1a 50%,
+                #1a1a1a 75%,
+                #2a2a2a 75%
+            ) !important;
+            background-size: 20px 20px;
+        }
+
+        /* 12. LUCKY THEME - Lucky Charm */
+        .lucky-theme {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lucky-theme::before {
+            content: '🍀';
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.1;
+            top: 20%;
+            left: 15%;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .lucky-theme::after {
+            content: '✨';
+            position: absolute;
+            font-size: 30px;
+            opacity: 0.2;
+            bottom: 20%;
+            right: 15%;
+            animation: sparkle 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { 
+                transform: scale(1) rotate(0deg); 
+                opacity: 0.2;
+            }
+            50% { 
+                transform: scale(1.2) rotate(180deg); 
+                opacity: 0.4;
+            }
+        }
+
+        .lucky-theme .btn-primary,
+        .lucky-theme .btn-success {
+            background: linear-gradient(
+                90deg,
+                #ff0000,
+                #ff7f00,
+                #ffff00,
+                #00ff00,
+                #0000ff,
+                #4b0082,
+                #9400d3
+            ) !important;
+            background-size: 200% 100%;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            from { background-position: 0% 50%; }
+            to { background-position: 200% 50%; }
+        }
+
+        .lucky-theme .stat-card {
+            border-color: #2ecc71 !important;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+        }
+
+        /* END EASTER EGG THEME CLASSES */
         
     </style>
 </head>
