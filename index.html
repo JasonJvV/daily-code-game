@@ -1786,8 +1786,10 @@
                         if (egg) triggered.push(egg);
                     }
 
-                    // 7. Mirror Master (palindromic guess attempt)
-                    if (this.isPalindrome(guess)) {
+                   // 7. Mirror Master (palindromic guess attempt, excluding only 1111 and 6666)
+                    if (this.isPalindrome(guess) && 
+                        !(guess.every(n => n === 1)) &&  // Exclude 1111
+                        !(guess.every(n => n === 6))) {   // Exclude 6666
                         const egg = this.triggerEasterEgg('symmetry');
                         if (egg) triggered.push(egg);
                     }
