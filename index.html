@@ -1158,8 +1158,10 @@
 
             // Apply theme when easter egg is discovered
             applyTheme(eggId) {
+                console.log('applyTheme called with:', eggId);
                 try {
                     const egg = this.easterEggs[eggId];
+                    console.log('Found egg:', egg);
                     if (egg && egg.themeClass && !this.activeThemes.includes(eggId)) {
                         const gameContainer = document.querySelector('.game-container');
                         console.log('Applying theme:', egg.themeClass, 'to container:', gameContainer);
@@ -1171,6 +1173,13 @@
                         }
                         this.activeThemes.push(eggId);
                         this.saveActiveThemes();
+                    } else {
+                        console.log('Theme not applied. Reasons:', {
+                            hasEgg: !!egg,
+                            hasThemeClass: !!(egg && egg.themeClass),
+                            alreadyActive: this.activeThemes.includes(eggId),
+                            activeThemes: this.activeThemes
+                        });
                     }
                 } catch (error) {
                     console.log('Error applying theme:', error);
