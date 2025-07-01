@@ -1162,7 +1162,7 @@
                 try {
                     const egg = this.easterEggs[eggId];
                     console.log('Found egg:', egg);
-                    if (egg && egg.themeClass && !this.activeThemes.includes(eggId)) {
+                    if (egg && egg.themeClass) {
                         const gameContainer = document.querySelector('.game-container');
                         console.log('Applying theme:', egg.themeClass, 'to container:', gameContainer);
                         if (gameContainer) {
