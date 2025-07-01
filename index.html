@@ -1171,7 +1171,9 @@
                         } else {
                             console.log('Game container not found!');
                         }
-                        this.activeThemes.push(eggId);
+                        if (!this.activeThemes.includes(eggId)) {
+                            this.activeThemes.push(eggId);
+                        }
                         this.saveActiveThemes();
                     } else {
                         console.log('Theme not applied. Reasons:', {
