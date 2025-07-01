@@ -1063,8 +1063,12 @@
                 this.previousGuesses = this.loadPreviousGuesses();
                 
                 // Load and apply today's active themes
+                // Load and apply today's active themes
                 this.activeThemes = this.loadActiveThemes();
-                this.applyStoredThemes();
+                // Delay applying themes until DOM is ready
+                setTimeout(() => {
+                    this.applyStoredThemes();
+                }, 100);
             }
 
             // Load unlocked easter eggs from localStorage (SAFE - read only)
@@ -1168,6 +1172,8 @@
                         if (gameContainer) {
                             gameContainer.classList.add(egg.themeClass);
                             console.log('Container classes after:', gameContainer.className);
+                            // Force a reflow to ensure CSS is applied
+                            gameContainer.offsetHeight;
                         } else {
                             console.log('Game container not found!');
                         }
