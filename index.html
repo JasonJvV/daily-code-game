@@ -2687,6 +2687,16 @@
                 // Load all stats
                 await this.loadAndDisplayStats();
                 await this.loadYesterdaySolution();
+
+                // Add easter egg section if any are unlocked
+                const easterEggSection = this.easterEggManager.renderEasterEggSection();
+                if (easterEggSection) {
+                    // Find where to insert it - after the fastest time section
+                    const fastestTimeCard = document.querySelector('.fastest-time');
+                    if (fastestTimeCard) {
+                        fastestTimeCard.insertAdjacentHTML('afterend', easterEggSection);
+                    }
+                }
                 
                 // Generate share text
                 this.generateShareText();
