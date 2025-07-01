@@ -777,6 +777,56 @@
         }
         
         /* END EASTER EGG STYLES */
+
+        /* ==========================================
+        EASTER EGG THEME CLASSES
+        ========================================== */
+
+        /* 1. FIBONACCI THEME - Golden Ratio */
+        .fibonacci-theme {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fibonacci-theme::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(
+                circle,
+                transparent 40%,
+                rgba(255, 215, 0, 0.1) 40.5%,
+                rgba(255, 215, 0, 0.1) 50%,
+                transparent 50.5%
+            );
+            animation: goldenSpin 60s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes goldenSpin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .fibonacci-theme .btn,
+        .fibonacci-theme .guess-slot,
+        .fibonacci-theme .stat-card {
+            border-color: #FFD700 !important;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .fibonacci-theme .color-btn {
+            background: linear-gradient(135deg, #333 0%, rgba(255, 215, 0, 0.2) 100%);
+        }
+
+        .fibonacci-theme .timer-info,
+        .fibonacci-theme .stat-value {
+            color: #FFD700;
+        }
         
     </style>
 </head>
