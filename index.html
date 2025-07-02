@@ -2793,27 +2793,51 @@
                 const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
                 const puzzleNumber = daysDiff + 1;
                 
-                let shareText = `Daily Code #${puzzleNumber} ${this.gameWon ? this.guesses.length : 'X'}/10\n\n`;
+                // Line 1: Daily Code #X
+                let shareText = `Daily Code #${puzzleNumber}\n`;
                 
-                // Generate emoji grid
-                this.feedbackHistory.forEach(feedback => {
-                    feedback.forEach(result => {
-                        if (result === 'correct') {
-                            shareText += '🟩';
-                        } else if (result === 'wrong-position') {
-                            shareText += '🟨';
-                        } else {
-                            shareText += '⬜';
-                        }
-                    });
-                    shareText += '\n';
-                });
+                // Line 2: Guesses/10 and rank (if won)
+                shareText += `${this.gameWon ? this.guesses.length : 'X'}/10`;
+                if (this.gameWon && this.playerRank) {
+                    shareText += ` 🏆${this.getOrdinalSuffix(this.playerRank)}`;
+                }
+                shareText += '\n\n';
                 
-                // Display version for the UI (cleaner)
-                let displayText = shareText + '\n🎮 dailycodegame.com';
-                document.getElementById('emoji-grid').textContent = displayText;
+                // Line 3: Time (only if won)
+                if (this.gameWon) {
+                    const savedGame = localStorage.getItem('dailyCodeLastGame');
+                    if (savedGame) {
+                        const gameData = JSON.parse(savedGame);
+                        const minutes = Math.floor(gameData.time / 60);
+                        const seconds = gameData.time % 60;
+                        shareText += `⏱️ ${minutes}:${seconds.toString().padStart(2, '0')}\n\n`;
+                    }
+                }
                 
-                // Return full version for actual sharing
+                // Easter eggs line (only if any found)
+                const unlockedEggs = this.easterEggManager.getUnlockedEggs();
+                if (unlockedEggs.length > 0) {
+                    // Rarity levels
+                    const rarityLevels = [
+                        { min: 1, max: 1, text: 'Seeker' },
+                        { min: 2, max: 3, text: 'Hunter' },
+                        { min: 4, max: 6, text: 'Explorer' },
+                        { min: 7, max: 9, text: 'Master' },
+                        { min: 10, max: 11, text: 'Legend' },
+                        { min: 12, max: 12, text: 'Omniscient' }
+                    ];
+                    
+                    const level = rarityLevels.find(l => unlockedEggs.length >= l.min && unlockedEggs.length <= l.max);
+                    shareText += `🥚×${unlockedEggs.length} ${level.text}\n\n`;
+                }
+                
+                // Final line: game URL
+                shareText += '🎮 dailycodegame.com';
+                
+                // Update the display
+                document.getElementById('emoji-grid').textContent = shareText;
+                
+                // Return for sharing
                 return shareText;
             }
 
