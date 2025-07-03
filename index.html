@@ -835,7 +835,7 @@
         }
 
         .binary-theme::before {
-            content: '01001000101110010110110001100001';
+            content: 'CODE CODE CODE CODE CODE CODE CODE CODE CODE CODE CODE CODE CODE ';
             position: absolute;
             top: -20px;
             left: 0;
@@ -1801,6 +1801,7 @@
 
                     // 8. Code Master (3,6,4,5 - spells CODE)
                     if (guess.join('') === '3645') {
+                        console.log('Code Master check:', guess, guess.join(''), guess.join('') === '3645');
                         const egg = this.triggerEasterEgg('binaryCode');
                         if (egg) triggered.push(egg);
                     }
