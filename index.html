@@ -1798,6 +1798,11 @@
                     if (this.isBirthday(guess)) {
                         const egg = this.triggerEasterEgg('birthday');
                         if (egg) triggered.push(egg);
+
+                    // 8. Code Master (3,6,4,5 - spells CODE)
+                    if (guess.join('') === '3645') {
+                        const egg = this.triggerEasterEgg('binaryCode');
+                        if (egg) triggered.push(egg);
                     }
                 } catch (error) {
                     console.log('Error checking easter eggs:', error);
