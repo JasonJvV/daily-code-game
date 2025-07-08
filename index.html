@@ -2728,6 +2728,33 @@
                         document.getElementById('final-avg-guesses').textContent = stats.averageGuesses || '-';
                         document.getElementById('win-rate').textContent = `${stats.winRate || 0}%`;
                     }
+                    // Fetch updated ranking for today
+                    const today = new Date().toISOString().split('T')[0];
+                    const savedGame = localStorage.getItem('dailyCodeLastGame');
+                    if (savedGame && this.gameWon) {
+                        const gameData = JSON.parse(savedGame);
+                        if (gameData.date === today) {
+                            const rankResponse = await fetch(`${API_URL}/game/rank`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    playerId: this.playerId,
+                                    date: today,
+                                    time: gameData.time
+                                })
+                            });
+                            
+                            if (rankResponse.ok) {
+                                const rankData = await rankResponse.json();
+                                this.playerRank = rankData.rank;
+                                
+                                // Update the displayed rank
+                                document.getElementById('player-rank').textContent = this.getOrdinalSuffix(this.playerRank);
+                            }
+                        }
+                    }
                     
                     // Fetch today's puzzle stats
                     const puzzleResponse = await fetch(`${API_URL}/puzzle/today`);
