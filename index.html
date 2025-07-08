@@ -2697,12 +2697,15 @@
                 await this.loadYesterdaySolution();
 
                 // Add easter egg section if any are unlocked
-                const easterEggSection = this.easterEggManager.renderEasterEggSection();
-                if (easterEggSection) {
-                    // Find where to insert it - after the fastest time section
-                    const fastestTimeCard = document.querySelector('.fastest-time');
-                    if (fastestTimeCard) {
-                        fastestTimeCard.insertAdjacentHTML('afterend', easterEggSection);
+                const existingEasterEggSection = document.querySelector('.easter-egg-section');
+                if (!existingEasterEggSection) {
+                    const easterEggSection = this.easterEggManager.renderEasterEggSection();
+                    if (easterEggSection) {
+                        // Find where to insert it - after the fastest time section
+                        const fastestTimeCard = document.querySelector('.fastest-time');
+                        if (fastestTimeCard) {
+                            fastestTimeCard.insertAdjacentHTML('afterend', easterEggSection);
+                        }
                     }
                 }
                 
