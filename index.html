@@ -2839,14 +2839,14 @@
                     shareText += `🥚×${unlockedEggs.length} ${level.text}\n\n`;
                 }
                 
-                // Final line: game URL
-                shareText += '🎮 dailycodegame.com';
+                // Create display version with clean URL
+                let displayText = shareText + '🎮 dailycodegame.com';
                 
                 // Update the display
-                document.getElementById('emoji-grid').textContent = shareText;
+                document.getElementById('emoji-grid').textContent = displayText;
                 
-                // Return for sharing
-                return shareText;
+                // Return version with real URL for actual sharing
+                return shareText + '🎮 https://jasonjvv.github.io/daily-code-game/';
             }
 
             shareResults() {
