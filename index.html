@@ -2858,6 +2858,7 @@
                     navigator.share({
                         title: 'Daily Code Game',
                         text: shareText,
+                        url: gameUrl
                     }).catch(err => {
                         // If user cancels or error occurs, fall back to copy
                         if (err.name !== 'AbortError') {
